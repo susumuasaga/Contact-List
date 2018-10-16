@@ -56,4 +56,4 @@ Para executar o servidor da aplicação, o servidor de base de dados deve estar 
 node dist/index
 ```
 
-Depois, basta abrir o Browser no endereço `http://localhost:3000`.
+Depois, basta abrir o Browser no endereço http://localhost:3000.
