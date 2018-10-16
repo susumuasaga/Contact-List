@@ -1,27 +1,59 @@
-# ContactList2
+# ContactList
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.5.
+Susumu Asaga<br/>
+susumu.asaga@gmail.com
 
-## Development server
+## Pre-requisitos
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. Node.js 9+ (ES2017).
 
-## Code scaffolding
+2. MongoDB 4+. Pode ser baixado no [site de download de MongoDB](www.mongodb.com/download-center).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+3. Angular CLI 6+.
 
-## Build
+4. Instalar dependências locais por meio do NPM.
+```
+npm install
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+5. Para compilar programas em Typescript, instalar o compilador Typescript por meio do NPM.
+ ```
+ npm install -g typescript
+ ```
 
-## Running unit tests
+6. Para executar as tarefas de compilação e teste, instalar Gulp-CLI, por meio do NPM.
+ ```
+ npm install -g gulp-cli
+ ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Testes de unidade do backend
 
-## Running end-to-end tests
+O backend é testado por meio de 8 casos de teste, com cobertura quase total do código da aplicação.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+A suíte de testes também inicializa a base de dados.
 
-## Further help
+Primeiro, precisamos iniciar o servidor de base de dados, MongoDB.
+```
+mongod --dbpath data/db
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Note que o dbpath `/data/db` precisa existir antes de executar `mongod`. Para isso você precisa criar este diretório.
+
+O servidor espera por conexões no port 27017. Uma vez iniciado o servidor de base de dados, em uma outra janela do terminal, podemos executar os testes por meio de tarefa Gulp. 
+```
+gulp test
+```
+Se tudo estiver certo, a base de dados será inicializada com os dados de teste, e 8 testes serão executados sem falhas.
+
+O Contact List Backend foi escrito em Typescript, e os programas fontes estão no diretório `/server`, os códigos da suíte de teste de unidade estão no diretório `/server/spec`.
+
+Os programas fontes foram compilados em Javascript para o diretório `/dist`.
+
+## Servidor da aplicação
+
+Para executar o servidor da aplicação, o servidor de base de dados deve estar ativo, como explicado na seção anterior. O servidor da aplicação é executado em Node.js e fica escutando no port 3000.
+```
+node dist/index
+```
+
+Depois, basta abrir o Browser no endereço `http://localhost:3000`.
