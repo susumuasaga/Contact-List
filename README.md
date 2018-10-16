@@ -45,11 +45,11 @@ gulp test
 ```
 Se tudo estiver certo, a base de dados será inicializada com os dados de teste, e 8 testes serão executados sem falhas.
 
+## Servidor da aplicação
+
 O Contact List Backend foi escrito em Typescript, e os programas fontes estão no diretório `/server`, os códigos da suíte de teste de unidade estão no diretório `/server/spec`.
 
 Os programas fontes foram compilados em Javascript para o diretório `/dist`.
-
-## Servidor da aplicação
 
 Para executar o servidor da aplicação, o servidor de base de dados deve estar ativo, como explicado na seção anterior. O servidor da aplicação é executado em Node.js e fica escutando no port 3000.
 ```
