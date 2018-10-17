@@ -5,9 +5,10 @@ import http = require('http');
 import mongoose = require('mongoose');
 import morgan = require('morgan');
 import { FakeLogger } from './fakeLogger';
-import { ContactModel, CreateContactModel } from '../contact';
-import { api, Contact } from '../api';
+import { ContactModel, CreateContactModel } from '../contactModel';
+import { api } from '../api';
 import { contacts } from './testDB';
+import { Contact } from '../contact';
 
 const URL_ROOT = 'http://localhost:3000';
 

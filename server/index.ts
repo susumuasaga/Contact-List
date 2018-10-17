@@ -5,7 +5,7 @@ mongoose.connect('mongodb://localhost:27017/test', {
   useNewUrlParser: true,
   useCreateIndex: true
 });
-import { CreateContactModel } from './contact';
+import { CreateContactModel } from './contactModel';
 const contactModel = CreateContactModel();
 import * as winston from 'winston';
 const logger = winston.createLogger({

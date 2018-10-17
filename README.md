@@ -26,7 +26,7 @@ npm install
  npm install -g gulp-cli
  ```
 
-## Testes de unidade do backend
+## Testes de unidade de ContactList Backend
 
 O backend é testado por meio de 9 casos de teste, com cobertura quase total do código da aplicação.
 
@@ -39,15 +39,19 @@ mongod --dbpath data/db
 
 Note que o dbpath `/data/db` precisa existir antes de executar `mongod`. Para isso você precisa criar este diretório.
 
-O servidor espera por conexões no port 27017. Uma vez iniciado o servidor de base de dados, em uma outra janela do terminal, podemos executar os testes por meio de tarefa Gulp. 
+O servidor MongoDB espera por conexões no port 27017.
+
+Uma vez iniciado o servidor de base de dados, em uma outra janela do terminal, podemos executar os testes por meio de tarefa Gulp. 
 ```
 gulp test
 ```
 Se tudo estiver certo, a base de dados será inicializada com os dados de teste, e os testes serão executados sem falhas.
 
-## Servidor da aplicação
+Os código fonte, em TypeScript, da suíte de teste de unidade estão no diretório `/server/spec`
 
-O Contact List Backend foi escrito em Typescript, e os programas fontes estão no diretório `/server`, os códigos da suíte de teste de unidade estão no diretório `/server/spec`.
+## Servidor de ContactList Backend
+
+O ContactList Backend foi escrito em Typescript, e os programas fontes estão no diretório `/server`.
 
 Os programas fontes foram compilados em Javascript para o diretório `/dist`.
 

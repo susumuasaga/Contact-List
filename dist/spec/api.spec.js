@@ -6,7 +6,7 @@ const http_status_1 = require("http-status");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const fakeLogger_1 = require("./fakeLogger");
-const contact_1 = require("../contact");
+const contactModel_1 = require("../contactModel");
 const api_1 = require("../api");
 const testDB_1 = require("./testDB");
 const URL_ROOT = 'http://localhost:3000';
@@ -27,7 +27,7 @@ describe('API', function () {
             useNewUrlParser: true,
             useCreateIndex: true
         });
-        contactModel = contact_1.CreateContactModel();
+        contactModel = contactModel_1.CreateContactModel();
         logger = new fakeLogger_1.FakeLogger();
         app.use(api_1.api(contactModel, logger));
         server = await server$(app, 3000);

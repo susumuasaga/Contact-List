@@ -2,18 +2,9 @@ import bodyParser = require('body-parser');
 import express = require('express');
 import { OK, INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST } from 'http-status';
 import { Logger } from './logger';
-import { ContactModel } from './contact';
+import { ContactModel } from './contactModel';
+import { Contact } from './contact';
 
-/**
- * Request and response body interface of '/contacts' endpoint.
- */
-export interface Contact {
-  _id?: string;
-  name: string;
-  fields: {
-    [name: string]: string;
-  };
-}
 export abstract class HttpError extends Error {
   statusCode: number;
   errorCode: number;

@@ -14,8 +14,8 @@ mongoose.connect('mongodb://localhost:27017/test', {
     useNewUrlParser: true,
     useCreateIndex: true
 });
-const contact_1 = require("./contact");
-const contactModel = contact_1.CreateContactModel();
+const contactModel_1 = require("./contactModel");
+const contactModel = contactModel_1.CreateContactModel();
 const winston = __importStar(require("winston"));
 const logger = winston.createLogger({
     level: 'info',

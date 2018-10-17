@@ -12,6 +12,11 @@ module.exports = function (config) {
       require('karma-coverage-istanbul-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
+    crossOriginAttribute: false,
+    files: [
+      "https://use.fontawesome.com/releases/v5.2.0/css/all.css",
+      "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
