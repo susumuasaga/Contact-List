@@ -49,7 +49,7 @@ Se tudo estiver certo, a base de dados será inicializada com os dados de teste,
 
 Os código fonte, em TypeScript, da suíte de teste de unidade estão no diretório `/server/spec`
 
-## Teste de unidade de ContactList Frontend
+## Testes de unidade de ContactList Frontend
 
 Os testes de unidade do frontend são executados por Karma. Aqui também os testes foram planejados para a máxima cobertura do código. O frontend foi testado isoladamente com a substituição de componentes relacionados ao backend por mocks. Portanto, para os testes de frontend, não é necessário que o servidor do backend nem do MongoDB estejam ativos.
 
