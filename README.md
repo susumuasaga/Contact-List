@@ -49,13 +49,21 @@ Se tudo estiver certo, a base de dados será inicializada com os dados de teste,
 
 Os código fonte, em TypeScript, da suíte de teste de unidade estão no diretório `/server/spec`
 
+## Teste de unidade de ContactList Frontend
+
+Os testes de unidade do frontend são executados por Karma. Aqui também os testes foram planejados para a máxima cobertura do código. O frontend foi testado isoladamente com a substituição de componentes relacionados ao backend por mocks. Portanto, para os testes de frontend, não é necessário que o servidor do backend nem do MongoDB estejam ativos.
+
+Podemos executar os testes de unidade por meio de tarefa NPM.
+```
+npm test
+```
+Depois de iniciada a tarefa, o Google Chrome abrirá automaticamente e, ao final dos testes, mostrará o resultado.
+
 ## Execução de ContactList
 
-O ContactList Backend foi escrito em Typescript, e os programas fontes estão no diretório `/server`.
+A aplicação ContactList foi escrito em Typescript. Os programas fontes do backend estão no diretório `/server`. Os do frontend estão no diretório `/src`. Os arquivos compilados estão no diretório `/dist`.
 
-Os programas fontes foram compilados em Javascript para o diretório `/dist`.
-
-Para executar a aplicação, o servidor de base de dados deve estar ativo, como explicado na seção anterior. O servidor da aplicação é executado em Node.js e fica escutando no port 3000.
+Para executar a aplicação, o servidor de base de dados deve estar ativo, como explicado na seção acima. O servidor da aplicação é executado em Node.js e fica escutando no port 3000.
 ```
 node dist/index
 ```
