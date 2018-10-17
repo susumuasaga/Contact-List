@@ -1,25 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.contacts = [{
-        name: 'Unilever Brasil',
+        name: 'Paul Polman',
         fields: {
-            email: 'fulano.de.tal@unilever.com.br'
+            email: 'paul.polman@unilever.com'
         }
     }, {
-        name: 'Apple Computing Brasil',
+        name: 'Tim Cook',
         fields: {
-            telefone: '(11)5503-0000'
+            telefone: '0800-761-0880'
         }
     }, {
-        name: 'Nike do Brasil',
+        name: 'Mark Parker',
         fields: {
-            endereço: 'Rua Werner Siemens 111, São Paulo,SP'
+            cargo: 'CEO',
+            empresa: 'Nike'
         }
     }, {
         name: 'Susumu Asaga',
         fields: {
             email: 'susumu.asaga@gmail.com',
             telefone: '(11)98430-9134',
-            endereço: 'Av. Antônio Frederico Ozanan, 9200, 214, Jundiaí, SP'
+            cargo: 'Auditor-fiscal',
+            empresa: 'Receita Federal do Brasil'
         }
     }];

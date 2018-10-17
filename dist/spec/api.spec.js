@@ -75,28 +75,22 @@ describe('API', function () {
             }
         })();
     });
-    it('can create a contact', async () => {
+    it('can create and remove a contact', async () => {
         const contact = {
-            name: 'Ford Motor Company',
+            name: 'James Hackett',
             fields: {
-                email: 'henry@ford.com',
+                email: 'james.hackett@ford.com',
             }
         };
-        const res = await superagent
+        let res = await superagent
             .post(URL_ROOT + '/contacts')
             .send(contact);
         expect(res.status).toBe(http_status_1.OK);
         const id = res.body._id;
         const contactDoc = await contactModel.findById(id).exec();
-        expect(contactDoc.name).toBe('Ford Motor Company');
-    });
-    it('can delete a contact', async () => {
-        const contactDoc = await contactModel
-            .findOne()
-            .where('name').equals('Unilever Brasil')
-            .exec();
-        const res = await superagent
-            .delete(URL_ROOT + '/contacts/' + contactDoc._id);
+        expect(contactDoc.name).toBe('James Hackett');
+        res = await superagent
+            .delete(URL_ROOT + '/contacts/' + id);
         expect(res.status).toBe(http_status_1.OK);
     });
     it('should allow delete of non-existing contact', async () => {
@@ -108,14 +102,14 @@ describe('API', function () {
     it('can update existing contact', async () => {
         const id = (await contactModel
             .findOne()
-            .where('name').equals('Unilever Brasil')
+            .where('name').equals('Susumu Asaga')
             .exec())._id;
         const contact = {
             _id: id,
-            name: 'Paul Polman',
+            name: 'Susumu Asaga',
             fields: {
-                empresa: 'Unilever',
-                email: 'paul.polman@unilever.com'
+                email: 'susumu.asaga@gmail.com',
+                telefone: '(11)98430-9134'
             }
         };
         const res = await superagent
@@ -123,16 +117,16 @@ describe('API', function () {
             .send(contact);
         expect(res.status).toBe(http_status_1.OK);
         const contactDoc = await contactModel.findById(id).exec();
-        expect(contactDoc.name).toBe('Paul Polman');
+        expect(contactDoc.fields.empresa).toBeFalsy();
     });
     it('should create a new contact ' +
         'when try to update non-existing contact', async () => {
         let id = '123456789abcdef012345678';
         const contact = {
             _id: id,
-            name: 'Ford Motor Company',
+            name: 'James Hackett',
             fields: {
-                email: 'henry@ford.com'
+                email: 'james.hackett@ford.com',
             }
         };
         const res = await superagent
@@ -141,6 +135,7 @@ describe('API', function () {
         expect(res.status).toBe(http_status_1.OK);
         id = res.body._id;
         const contactDoc = await contactModel.findById(id).exec();
-        expect(res.body.name).toBe('Ford Motor Company');
+        expect(res.body.name).toBe('James Hackett');
+        await contactDoc.remove();
     });
 });

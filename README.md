@@ -28,7 +28,7 @@ npm install
 
 ## Testes de unidade do backend
 
-O backend é testado por meio de 8 casos de teste, com cobertura quase total do código da aplicação.
+O backend é testado por meio de 7 casos de teste, com cobertura quase total do código da aplicação.
 
 A suíte de testes também inicializa a base de dados.
 
@@ -43,7 +43,7 @@ O servidor espera por conexões no port 27017. Uma vez iniciado o servidor de ba
 ```
 gulp test
 ```
-Se tudo estiver certo, a base de dados será inicializada com os dados de teste, e 8 testes serão executados sem falhas.
+Se tudo estiver certo, a base de dados será inicializada com os dados de teste, e os 7 testes serão executados sem falhas.
 
 ## Servidor da aplicação
 
