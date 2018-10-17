@@ -1,8 +1,9 @@
 import mongoose = require('mongoose');
 
 export interface ContactDoc extends mongoose.Document {
+  _id: mongoose.Types.ObjectId;
   name: string;
-  fields: { [name: string]: string };
+  fields: Map<string, string>;
 }
 
 export type ContactModel = mongoose.Model<ContactDoc>;

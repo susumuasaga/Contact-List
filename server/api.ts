@@ -72,15 +72,14 @@ export function api(contactModel: ContactModel, logger: Logger) {
   });
 
   router.put('/contacts/:id', async (req, res, next) => {
-    const contact = req.body as Contact;
+    const contact: Contact = req.body;
     if (!contact) {
       next(new BadRequest('Nenhum contato especificado.'));
     }
     const id = req.params.id;
     let contactDoc = await contactModel.findById(id).exec();
     if (contactDoc) {
-      contactDoc.name = contact.name;
-      contactDoc.set('fields', contact.fields);
+      contactDoc.set(contact);
     } else {
       delete contact._id;
       contactDoc = new contactModel(contact);

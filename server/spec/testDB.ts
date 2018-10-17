@@ -12,7 +12,7 @@ export const contacts: Contact[] = [{
 }, {
   name: 'Tim Cook',
   fields: {
-    telefone: '0800-761-0880'
+    telefone: '+1(212)9876-5432'
   }
 }, {
   name: 'Mark Parker',
@@ -24,8 +24,12 @@ export const contacts: Contact[] = [{
   name: 'Susumu Asaga',
   fields: {
     email: 'susumu.asaga@gmail.com',
-    telefone: '(11)98430-9134',
-    cargo: 'Auditor-fiscal',
-    empresa: 'Receita Federal do Brasil'
+    telefone: '+55(11)98430-9134',
+  }
+}, {
+  name: 'James Hackett',
+  fields: {
+    email: 'james.hackett@ford.com',
+    telefone: '+1(212)1234-5678'
   }
 }];

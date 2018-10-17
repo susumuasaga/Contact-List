@@ -62,8 +62,7 @@ function api(contactModel, logger) {
         const id = req.params.id;
         let contactDoc = await contactModel.findById(id).exec();
         if (contactDoc) {
-            contactDoc.name = contact.name;
-            contactDoc.set('fields', contact.fields);
+            contactDoc.set(contact);
         }
         else {
             delete contact._id;

@@ -22,6 +22,7 @@ describe('API', function () {
   let server: http.Server;
   let contactModel: ContactModel;
   let logger: FakeLogger;
+  let id: string;
 
   beforeAll(async () => {
     const app = express();
@@ -41,6 +42,12 @@ describe('API', function () {
     await contactModel.deleteMany({});
     // Create test data
     await contactModel.create(contacts);
+    // retrieve James Hackett id
+    const contactDoc = await contactModel
+      .findOne()
+      .where('name').equals('James Hackett')
+      .exec();
+    id = contactDoc._id.toHexString();
   });
 
   afterAll(function () {
@@ -61,20 +68,16 @@ describe('API', function () {
   });
 
   it('can retrieve a single contact', async () => {
-    const contactDoc = await contactModel
-      .findOne()
-      .where('name').equals('Susumu Asaga')
-      .exec();
     const res = await superagent.get(
-      URL_ROOT + '/contacts/' + contactDoc._id
+      URL_ROOT + '/contacts/' + id
     );
     expect(res.status).toBe(OK);
-    const body = res.body as Contact;
-    expect(body.name).toBe('Susumu Asaga');
+    const contact: Contact = res.body;
+    expect(contact.name).toBe('James Hackett');
   });
 
-  it('should NOT_FOUND when contact _id not found', async () => {
-    const id = '123456789abcdef012345678';
+  it('should NOT_FOUND when contact id not found', async () => {
+    id = '123456789abcdef012345678';
     logger.clearErrorLog();
     await (async () => {
       try {
@@ -90,47 +93,47 @@ describe('API', function () {
     })();
   });
 
-  it('can create and remove a contact', async () => {
+  it('can create a contact', async () => {
     // Create a contact
-    const contact: Contact = {
-      name: 'James Hackett',
+    let contact: Contact = {
+      name: 'Andresa Rosa',
       fields: {
-        email: 'james.hackett@ford.com',
+        email: 'andresa.rosa@bravi.com.br',
+        telefone: '+55(48)3304-6336',
+        endereço: 'Rua Doutor Agostinho Sielski, 67'
       }
     };
-    let res = await superagent
+    const res = await superagent
       .post(URL_ROOT + '/contacts')
       .send(contact);
     expect(res.status).toBe(OK);
-    const id = res.body._id;
+    contact = res.body;
     // Check if it was created
-    const contactDoc = await contactModel.findById(id).exec();
-    expect(contactDoc.name).toBe('James Hackett');
-    // Remove the contact
-    res = await superagent
-      .delete(URL_ROOT + '/contacts/' + id);
+    const contactDoc = await contactModel.findById(contact._id).exec();
+    expect(contactDoc.name).toBe('Andresa Rosa');
+  });
+
+  it('can remove a contact', async () => {
+    const res = await superagent.delete(URL_ROOT + '/contacts/' + id);
     expect(res.status).toBe(OK);
   });
 
   it('should allow delete of non-existing contact', async () => {
-    const id = '123456789abcdef012345678';
+    id = '123456789abcdef012345678';
     const res = await superagent
       .delete(URL_ROOT + '/contacts/' + id);
     expect(res.status).toBe(OK);
   });
 
-  it('can update existing contact', async () => {
-    const id = (await contactModel
-      .findOne()
-      .where('name').equals('Susumu Asaga')
-      .exec())._id;
-    // remove fields 'cargo', 'empresa'
+  it('can add a field to existing contact', async () => {
+    // add field 'empresa'
     const contact: Contact = {
       _id: id,
-      name: 'Susumu Asaga',
+      name: 'James Hackett',
       fields: {
-        email: 'susumu.asaga@gmail.com',
-        telefone: '(11)98430-9134'
+        email: 'james.hackett@ford.com',
+        telefone: '+1(212)1234-5678',
+        empresa: 'Ford',
       }
     };
     const res = await superagent
@@ -139,28 +142,48 @@ describe('API', function () {
     expect(res.status).toBe(OK);
     // Check if updated
     const contactDoc = await contactModel.findById(id).exec();
-    expect(contactDoc.fields.empresa).toBeFalsy();
+    expect(contactDoc.fields.get('empresa')).toBe('Ford');
+  });
+
+  it('can remove a field from existing contact', async () => {
+    // remove field 'telefone'
+    const contact: Contact = {
+      _id: id,
+      name: 'James Hackett',
+      fields: {
+        email: 'james.hackett@ford.com'
+      }
+    };
+    const res = await superagent
+      .put(URL_ROOT + '/contacts/' + id)
+      .send(contact);
+    expect(res.status).toBe(OK);
+    // Check if updated
+    const contactDoc = await contactModel.findById(id).exec();
+    expect(contactDoc.fields.get('telefone')).toBeFalsy();
   });
 
   it('should create a new contact ' +
     'when try to update non-existing contact', async () => {
-      let id = '123456789abcdef012345678';
-      const contact: Contact = {
+      id = '123456789abcdef012345678';
+      let contact: Contact = {
         _id: id,
-        name: 'James Hackett',
+        name: 'Andresa Rosa',
         fields: {
-          email: 'james.hackett@ford.com',
+          email: 'andresa.rosa@bravi.com.br',
+          telefone: '+55(48)3304-6336',
+          endereço: 'Rua Doutor Agostinho Sielski, 67'
         }
       };
       const res = await superagent
-      .put(URL_ROOT + '/contacts/' + id)
-      .send(contact);
-    expect(res.status).toBe(OK);
-    // get new id
-    id = res.body._id;
-    // Check if contact created and remove it
-    const contactDoc = await contactModel.findById(id).exec();
-    expect(res.body.name).toBe('James Hackett');
-    await contactDoc.remove();
-  });
+        .put(URL_ROOT + '/contacts/' + id)
+        .send(contact);
+      expect(res.status).toBe(OK);
+      // get new id
+      contact = res.body;
+      id = contact._id;
+      // Check if contact was created
+      const contactDoc = await contactModel.findById(id).exec();
+      expect(contactDoc.name).toBe('Andresa Rosa');
+    });
 });

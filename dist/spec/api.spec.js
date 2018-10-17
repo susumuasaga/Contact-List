@@ -19,6 +19,7 @@ describe('API', function () {
     let server;
     let contactModel;
     let logger;
+    let id;
     beforeAll(async () => {
         const app = express();
         app.use(morgan('combined'));
@@ -34,6 +35,11 @@ describe('API', function () {
     beforeEach(async () => {
         await contactModel.deleteMany({});
         await contactModel.create(testDB_1.contacts);
+        const contactDoc = await contactModel
+            .findOne()
+            .where('name').equals('James Hackett')
+            .exec();
+        id = contactDoc._id.toHexString();
     });
     afterAll(function () {
         mongoose.models = {};
@@ -51,17 +57,13 @@ describe('API', function () {
         }
     });
     it('can retrieve a single contact', async () => {
-        const contactDoc = await contactModel
-            .findOne()
-            .where('name').equals('Susumu Asaga')
-            .exec();
-        const res = await superagent.get(URL_ROOT + '/contacts/' + contactDoc._id);
+        const res = await superagent.get(URL_ROOT + '/contacts/' + id);
         expect(res.status).toBe(http_status_1.OK);
-        const body = res.body;
-        expect(body.name).toBe('Susumu Asaga');
+        const contact = res.body;
+        expect(contact.name).toBe('James Hackett');
     });
-    it('should NOT_FOUND when contact _id not found', async () => {
-        const id = '123456789abcdef012345678';
+    it('should NOT_FOUND when contact id not found', async () => {
+        id = '123456789abcdef012345678';
         logger.clearErrorLog();
         await (async () => {
             try {
@@ -75,67 +77,84 @@ describe('API', function () {
             }
         })();
     });
-    it('can create and remove a contact', async () => {
-        const contact = {
-            name: 'James Hackett',
+    it('can create a contact', async () => {
+        let contact = {
+            name: 'Andresa Rosa',
             fields: {
-                email: 'james.hackett@ford.com',
+                email: 'andresa.rosa@bravi.com.br',
+                telefone: '+55(48)3304-6336',
+                endereço: 'Rua Doutor Agostinho Sielski, 67'
             }
         };
-        let res = await superagent
+        const res = await superagent
             .post(URL_ROOT + '/contacts')
             .send(contact);
         expect(res.status).toBe(http_status_1.OK);
-        const id = res.body._id;
-        const contactDoc = await contactModel.findById(id).exec();
-        expect(contactDoc.name).toBe('James Hackett');
-        res = await superagent
-            .delete(URL_ROOT + '/contacts/' + id);
+        contact = res.body;
+        const contactDoc = await contactModel.findById(contact._id).exec();
+        expect(contactDoc.name).toBe('Andresa Rosa');
+    });
+    it('can remove a contact', async () => {
+        const res = await superagent.delete(URL_ROOT + '/contacts/' + id);
         expect(res.status).toBe(http_status_1.OK);
     });
     it('should allow delete of non-existing contact', async () => {
-        const id = '123456789abcdef012345678';
+        id = '123456789abcdef012345678';
         const res = await superagent
             .delete(URL_ROOT + '/contacts/' + id);
         expect(res.status).toBe(http_status_1.OK);
     });
-    it('can update existing contact', async () => {
-        const id = (await contactModel
-            .findOne()
-            .where('name').equals('Susumu Asaga')
-            .exec())._id;
-        const contact = {
-            _id: id,
-            name: 'Susumu Asaga',
-            fields: {
-                email: 'susumu.asaga@gmail.com',
-                telefone: '(11)98430-9134'
-            }
-        };
-        const res = await superagent
-            .put(URL_ROOT + '/contacts/' + id)
-            .send(contact);
-        expect(res.status).toBe(http_status_1.OK);
-        const contactDoc = await contactModel.findById(id).exec();
-        expect(contactDoc.fields.empresa).toBeFalsy();
-    });
-    it('should create a new contact ' +
-        'when try to update non-existing contact', async () => {
-        let id = '123456789abcdef012345678';
+    it('can add a field to existing contact', async () => {
         const contact = {
             _id: id,
             name: 'James Hackett',
             fields: {
                 email: 'james.hackett@ford.com',
+                telefone: '+1(212)1234-5678',
+                empresa: 'Ford',
             }
         };
         const res = await superagent
             .put(URL_ROOT + '/contacts/' + id)
             .send(contact);
         expect(res.status).toBe(http_status_1.OK);
-        id = res.body._id;
         const contactDoc = await contactModel.findById(id).exec();
-        expect(res.body.name).toBe('James Hackett');
-        await contactDoc.remove();
+        expect(contactDoc.fields.get('empresa')).toBe('Ford');
+    });
+    it('can remove a field from existing contact', async () => {
+        const contact = {
+            _id: id,
+            name: 'James Hackett',
+            fields: {
+                email: 'james.hackett@ford.com'
+            }
+        };
+        const res = await superagent
+            .put(URL_ROOT + '/contacts/' + id)
+            .send(contact);
+        expect(res.status).toBe(http_status_1.OK);
+        const contactDoc = await contactModel.findById(id).exec();
+        expect(contactDoc.fields.get('telefone')).toBeFalsy();
+    });
+    it('should create a new contact ' +
+        'when try to update non-existing contact', async () => {
+        id = '123456789abcdef012345678';
+        let contact = {
+            _id: id,
+            name: 'Andresa Rosa',
+            fields: {
+                email: 'andresa.rosa@bravi.com.br',
+                telefone: '+55(48)3304-6336',
+                endereço: 'Rua Doutor Agostinho Sielski, 67'
+            }
+        };
+        const res = await superagent
+            .put(URL_ROOT + '/contacts/' + id)
+            .send(contact);
+        expect(res.status).toBe(http_status_1.OK);
+        contact = res.body;
+        id = contact._id;
+        const contactDoc = await contactModel.findById(id).exec();
+        expect(contactDoc.name).toBe('Andresa Rosa');
     });
 });
