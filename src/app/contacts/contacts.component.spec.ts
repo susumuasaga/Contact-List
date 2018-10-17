@@ -6,7 +6,7 @@ import { timeout$ } from '../asyncUtil';
 import { ContactService } from '../contact.service';
 import { contacts } from '../../testing/testDB';
 
-describe('CheckoutComponent', () => {
+describe('ContactsComponent', () => {
   let component: ContactsComponent;
   let fixture: ComponentFixture<ContactsComponent>;
   let rowEls: HTMLElement[];
@@ -27,7 +27,7 @@ describe('CheckoutComponent', () => {
     httpMock = TestBed.get(HttpTestingController);
     fixture.detectChanges();
     httpMock.expectOne({
-      url: '/api/products', method: 'GET'
+      url: '/api/contacts', method: 'GET'
     }).flush(contacts);
     await timeout$(1); // await load contacts
     fixture.detectChanges();
@@ -39,10 +39,10 @@ describe('CheckoutComponent', () => {
     httpMock.verify();
   });
 
-  it('should present list of products', async () => {
+  it('should present list of contacts', async () => {
     // list should have 6 rows:
     // heading and 5 items
-    expect(rowEls.length).toBe(5);
+    expect(rowEls.length).toBe(6);
     const heading =
       rowEls[0].firstElementChild.firstElementChild.textContent.trim();
     expect(heading).toBe('Contatos (5)');

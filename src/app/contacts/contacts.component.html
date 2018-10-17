@@ -4,14 +4,18 @@
       Contatos ({{contacts.length}})
     </h2>
   </div>
-  <div class="row" *ngFor="let contact of contacts">
-    <div class="col-md-4">
-      {{contact.name}}
-    </div>
-    <div class="col-md-3">
-      <div *ngIf="contact.fields['email']">
-        
-      </div>
-    </div>
+</div>
+<div class="row" *ngFor="let contact of contacts">
+  <div class="col-md-3">
+    {{contact.name}}
+  </div>
+  <div class="col-md-3">
+    {{contact.fields['email']}}
+  </div>
+  <div class="col-md-2">
+    {{contact.fields['telefone']}}
+  </div>
+  <div class="col-md-3">
+    {{contact.fields['cargo']}}, {{contact.fields['empresa']}}
   </div>
 </div>
