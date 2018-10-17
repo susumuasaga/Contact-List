@@ -49,13 +49,13 @@ Se tudo estiver certo, a base de dados será inicializada com os dados de teste,
 
 Os código fonte, em TypeScript, da suíte de teste de unidade estão no diretório `/server/spec`
 
-## Servidor de ContactList Backend
+## Execução de ContactList
 
 O ContactList Backend foi escrito em Typescript, e os programas fontes estão no diretório `/server`.
 
 Os programas fontes foram compilados em Javascript para o diretório `/dist`.
 
-Para executar o servidor da aplicação, o servidor de base de dados deve estar ativo, como explicado na seção anterior. O servidor da aplicação é executado em Node.js e fica escutando no port 3000.
+Para executar a aplicação, o servidor de base de dados deve estar ativo, como explicado na seção anterior. O servidor da aplicação é executado em Node.js e fica escutando no port 3000.
 ```
 node dist/index
 ```
