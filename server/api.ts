@@ -59,7 +59,7 @@ export function api(contactModel: ContactModel, logger: Logger) {
     if (contactDoc) {
       await contactDoc.remove();
     }
-    res.sendStatus(OK);
+    res.json(contactDoc);
   });
 
   router.put('/contacts/:id', async (req, res, next) => {

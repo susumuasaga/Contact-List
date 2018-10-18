@@ -1,4 +1,4 @@
-import { Contact } from 'server/contact';
+import { Contact } from '../contact';
 
 /*
  * Defines test db content, may be used to populate the db.

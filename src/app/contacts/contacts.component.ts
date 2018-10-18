@@ -24,8 +24,13 @@ export class ContactsComponent implements OnInit {
     this.contacts = await this.contactService.getContacts();
   }
 
-  async deleteContact(contact) {
+  async deleteContact(contact: Contact) {
     this.contactService.deleteContact(contact);
+    const index = this.contacts.findIndex(value =>
+      value._id === contact._id);
+    if (index !== -1) {
+      this.contacts.splice(index, 1);
+    }
   }
 
   getCargoEmpresa(contact: Contact): string {

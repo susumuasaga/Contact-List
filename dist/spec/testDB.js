@@ -21,6 +21,7 @@ exports.contacts = [{
         fields: {
             email: 'susumu.asaga@gmail.com',
             telefone: '+55(11)98430-9134',
+            cargo: 'Engenheiro de Software Senior'
         }
     }, {
         name: 'James Hackett',

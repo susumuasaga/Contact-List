@@ -64,7 +64,7 @@ describe('ContactsComponent', () => {
     }
   });
 
-  it('should present a button to add contacts', async () => {
+  it('should navigate when add button is clicked', async () => {
     addButton.click();
     const spy = router.navigateByUrl as jasmine.Spy;
     expect(spy.calls.count()).toBe(1);
@@ -72,7 +72,8 @@ describe('ContactsComponent', () => {
     expect(arg).toBe('/contactDetails');
   });
 
-  it('should present a button to remove contacts', async () => {
+  it('should delete a contact ' +
+    'when del button is clicked', async () => {
     const delButton =
       rowEls[1].lastElementChild.firstElementChild as
       HTMLButtonElement;
@@ -81,5 +82,16 @@ describe('ContactsComponent', () => {
       url: '/api/contacts/0001', method: 'DELETE'
     }).flush({});
     await timeout$(1); // await delete
+    fixture.detectChanges();
+    const fixtureNE = fixture.nativeElement;
+    rowEls = fixtureNE.querySelectorAll('.row');
+    // list should have 5 rows:
+    // heading and 4 items, first deleted
+    expect(rowEls.length).toBe(5);
+    for (let i = 0; i < contacts.length; i++) {
+      const contactName =
+        rowEls[i + 1].firstElementChild.textContent.trim();
+      expect(contactName).toBe(contacts[i].name);
+    }
   });
 });

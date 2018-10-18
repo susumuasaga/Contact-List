@@ -30,7 +30,9 @@ export class ContactService {
         } else if (error.status === UNAUTHORIZED) {
           alert('Você precisa registrar-se antes no site');
         } else {
-          alert(`${operation} falhou:\n${error.error.message}`);
+          alert(`${operation} falhou.
+  mensagem: ${error.error.message}
+  situação: ${error.statusText}`);
         }
       } else {
         alert(`erro: ${error}`);

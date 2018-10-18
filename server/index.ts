@@ -7,6 +7,8 @@ mongoose.connect('mongodb://localhost:27017/test', {
 });
 import { CreateContactModel } from './contactModel';
 const contactModel = CreateContactModel();
+import morgan = require('morgan');
+app.use(morgan('combined'));
 import * as winston from 'winston';
 const logger = winston.createLogger({
   level: 'info',

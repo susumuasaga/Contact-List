@@ -304,7 +304,7 @@ var ContactService = /** @class */ (function () {
                     alert('Você precisa registrar-se antes no site');
                 }
                 else {
-                    alert(operation + " falhou:\n" + error.error.message);
+                    alert(operation + " falhou.\n  mensagem: " + error.error.message + "\n  situa\u00E7\u00E3o: " + error.statusText);
                 }
             }
             else {

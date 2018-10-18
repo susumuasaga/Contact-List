@@ -52,7 +52,7 @@ function api(contactModel, logger) {
         if (contactDoc) {
             await contactDoc.remove();
         }
-        res.sendStatus(http_status_1.OK);
+        res.json(contactDoc);
     });
     router.put('/contacts/:id', async (req, res, next) => {
         const contact = req.body;

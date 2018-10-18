@@ -16,6 +16,8 @@ mongoose.connect('mongodb://localhost:27017/test', {
 });
 const contactModel_1 = require("./contactModel");
 const contactModel = contactModel_1.CreateContactModel();
+const morgan = require("morgan");
+app.use(morgan('combined'));
 const winston = __importStar(require("winston"));
 const logger = winston.createLogger({
     level: 'info',
