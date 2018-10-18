@@ -36,9 +36,10 @@ describe('ContactsComponent', () => {
     httpMock = TestBed.get(HttpTestingController);
     router = TestBed.get(Router);
     fixture.detectChanges();
+    // httpMock should return a copy of the original contacts
     httpMock.expectOne({
       url: '/api/contacts', method: 'GET'
-    }).flush(contacts);
+    }).flush(contacts.slice());
     await timeout$(1); // await load contacts
     fixture.detectChanges();
     const fixtureNE = fixture.nativeElement;
@@ -69,7 +70,7 @@ describe('ContactsComponent', () => {
     const spy = router.navigateByUrl as jasmine.Spy;
     expect(spy.calls.count()).toBe(1);
     const arg = spy.calls.mostRecent().args[0];
-    expect(arg).toBe('/contactDetails');
+    expect(arg).toBe('/detail');
   });
 
   it('should delete a contact ' +
@@ -88,10 +89,19 @@ describe('ContactsComponent', () => {
     // list should have 5 rows:
     // heading and 4 items, first deleted
     expect(rowEls.length).toBe(5);
-    for (let i = 0; i < contacts.length; i++) {
+    for (let i = 1; i < contacts.length; i++) {
       const contactName =
-        rowEls[i + 1].firstElementChild.textContent.trim();
+        rowEls[i].firstElementChild.textContent.trim();
       expect(contactName).toBe(contacts[i].name);
     }
+  });
+
+  it('should navigate to edit a contact ' +
+    'when the contact is clicked', async () => {
+    rowEls[1].click();
+    const spy = router.navigateByUrl as jasmine.Spy;
+    expect(spy.calls.count()).toBe(1);
+    const arg = spy.calls.mostRecent().args[0];
+    expect(arg).toBe('/detail/0001');
   });
 });
