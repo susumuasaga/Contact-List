@@ -45,4 +45,10 @@ export class ContactService {
       .pipe(catchError(this.handleError('getContacts', null)))
       .toPromise();
   }
+
+  deleteContact(contact: Contact): Promise<void> {
+    return this.http.delete('/api/contacts/' + contact._id)
+      .pipe(catchError(this.handleError('deleteContact', null)))
+      .toPromise();
+  }
 }

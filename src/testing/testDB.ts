@@ -9,7 +9,9 @@ export const contacts: Contact[] = [{
   name: 'James Hackett',
   fields: {
     email: 'james.hackett@ford.com',
-    telefone: '+1(212)1234-5678'
+    telefone: '+1(212)1234-5678',
+    cargo: 'CEO',
+    empresa: 'Ford'
   }
 }, {
   _id: '0002',
@@ -30,6 +32,7 @@ export const contacts: Contact[] = [{
   fields: {
     email: 'susumu.asaga@gmail.com',
     telefone: '+55(11)98430-9134',
+    cargo: 'Engenheiro de Software Senior'
   }
 }, {
   _id: '0005',

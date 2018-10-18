@@ -1,20 +1,28 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { ContactsComponent } from './contacts/contacts.component';
+import { ContactDetailsComponent } from './contact-details/contact-details.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
    declarations: [
       AppComponent,
-      ContactsComponent
+      ContactsComponent,
+      ContactDetailsComponent
    ],
    imports: [
-      BrowserModule
+      BrowserModule,
+      HttpClientModule,
+      AppRoutingModule,
+      NgbModule.forRoot()
    ],
    providers: [],
    bootstrap: [
-      AppComponent
+      AppComponent,
    ]
 })
 export class AppModule { }

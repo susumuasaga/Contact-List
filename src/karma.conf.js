@@ -14,7 +14,7 @@ module.exports = function (config) {
     ],
     crossOriginAttribute: false,
     files: [
-      "https://use.fontawesome.com/releases/v5.2.0/css/all.css",
+      "https://use.fontawesome.com/releases/v5.4.1/css/all.css",
       "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     ],
     client: {

@@ -5,17 +5,29 @@
     </h2>
   </div>
 </div>
-<div class="row" *ngFor="let contact of contacts">
-  <div class="col-md-3">
-    {{contact.name}}
-  </div>
-  <div class="col-md-3">
-    {{contact.fields['email']}}
-  </div>
-  <div class="col-md-2">
-    {{contact.fields['telefone']}}
-  </div>
-  <div class="col-md-3">
-    {{contact.fields['cargo']}}, {{contact.fields['empresa']}}
-  </div>
-</div>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let contact of contacts">
+    <div class="row">
+      <div class="col-md-3">
+        {{contact.name}}
+      </div>
+      <div class="col-md-3">
+        {{contact.fields['email']}}
+      </div>
+      <div class="col-md-2">
+        {{contact.fields['telefone']}}
+      </div>
+      <div class="col-md-3">
+        {{getCargoEmpresa(contact)}}
+      </div>
+      <div class="col-md-1">
+        <button type="button" class="btn btn-danger" (click)="deleteContact(contact)" ngbTooltip="Remover contato">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </li>
+</ul>
+<button type="button" class="btn" id="addButton" (click)="router.navigateByUrl('/contactDetails')" ngbTooltip="Criar contato">
+  <i class='fas fa-plus-circle'></i>
+</button>

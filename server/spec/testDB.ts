@@ -1,4 +1,4 @@
-import { Contact } from '../api';
+import { Contact } from 'server/contact';
 
 /*
  * Defines test db content, may be used to populate the db.
@@ -25,6 +25,7 @@ export const contacts: Contact[] = [{
   fields: {
     email: 'susumu.asaga@gmail.com',
     telefone: '+55(11)98430-9134',
+    cargo: 'Engenheiro de Software Senior'
   }
 }, {
   name: 'James Hackett',
