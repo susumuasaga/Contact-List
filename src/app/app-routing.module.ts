@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ContactsComponent } from './contacts/contacts.component';
-import { ContactDetailsComponent } from './contact-details/contact-details.component';
+import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 
 const routes: Routes = [
-  { path: '', component: ContactsComponent },
-  { path: 'contactDetails/:id', component: ContactDetailsComponent },
-  { path: 'contactDetails', component: ContactDetailsComponent },
+  { path: '', redirectTo: '/contacts', pathMatch: 'full' },
+  { path: 'detail/:id', component: ContactDetailComponent },
+  { path: 'contacts', component: ContactsComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

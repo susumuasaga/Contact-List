@@ -24,7 +24,7 @@ export class ContactsComponent implements OnInit {
     this.contacts = await this.contactService.getContacts();
   }
 
-  async deleteContact(contact: Contact) {
+  deleteContact(contact: Contact): void {
     this.contactService.deleteContact(contact);
     const index = this.contacts.findIndex(value =>
       value._id === contact._id);

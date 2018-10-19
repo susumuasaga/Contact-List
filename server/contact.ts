@@ -4,4 +4,4 @@ export interface Contact {
   fields: Fields;
 }
 
-export interface Fields { [name: string]: string; }
+export interface Fields { [label: string]: string; }

@@ -25,6 +25,10 @@ const logger = winston.createLogger({
 import { api } from './api';
 app.use('/api', api(contactModel, logger));
 app.use('/node_modules', express.static('./node_modules'));
+import path = require('path');
+app.use(['/contacts', '/detail'],
+  (req, res) =>
+    res.sendFile(path.resolve('dist/contact-list/index.html')));
 app.use(express.static('./dist/contact-list'));
 app.listen(3000,
   () => console.log('App listening at port 3000.'));

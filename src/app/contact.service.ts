@@ -6,16 +6,36 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Contact } from 'server/contact';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
-
 @Injectable({
   providedIn: 'root',
 })
 export class ContactService {
+  private contactsUrl = '/api/contacts';
+
   constructor(private http: HttpClient) {
   }
+
+  /** GET contacts from the server */
+  getContacts(): Promise<Contact[]> {
+    return this.http.get<Contact[]>(this.contactsUrl)
+      .pipe(catchError(this.handleError('getContacts', [])))
+      .toPromise();
+  }
+
+  /** DELETE the contact from the server */
+  deleteContact(contact: Contact): Promise<void> {
+    return this.http.delete(`${this.contactsUrl}/${contact._id}`)
+      .pipe(catchError(this.handleError('deleteContact', null)))
+      .toPromise();
+  }
+
+  /** POST: add a new contact to the server */
+  createContact(contact: Contact): Promise<Contact> {
+    return this.http.post(this.contactsUrl, contact)
+    .pipe(catchError(this.handleError('createContact', null)))
+    .toPromise();
+}
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
@@ -40,17 +60,5 @@ export class ContactService {
       console.error('erro:', error);
       return of(result);
     };
-  }
-
-  getContacts(): Promise<Contact[]> {
-    return this.http.get<Contact[]>('/api/contacts')
-      .pipe(catchError(this.handleError('getContacts', null)))
-      .toPromise();
-  }
-
-  deleteContact(contact: Contact): Promise<void> {
-    return this.http.delete('/api/contacts/' + contact._id)
-      .pipe(catchError(this.handleError('deleteContact', null)))
-      .toPromise();
   }
 }

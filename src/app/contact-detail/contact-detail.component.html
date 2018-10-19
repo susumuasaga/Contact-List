@@ -1,14 +1,38 @@
-<h2>
-  Editar Contato
-</h2>
-<form [formGroup]="contactForm">
-  <div class="form-group">
-    <label>
-      Nome
-      <input class="form-control" formControlName="name">
-    </label>
-  </div>
-  <div class="form-row">
-    
-  </div>
-</form>
+<div class="container">
+  <h2>
+    Editar Contato
+  </h2>
+  <form [formGroup]="contactForm">
+    <div class="form-group">
+      <label>
+        Nome
+      </label>
+      <input class="form-control" formControlName="name" placeholder="nome">
+    </div>
+    <div formArrayName="fields" *ngFor="let field of contactFields.controls; let i=index">
+      <div class="form-row" [formGroupName]="i">
+        <div class="col-md-5">
+          <input class="form-control" formControlName="label" placeholder="marcador">
+        </div>
+        <div class="col-md-6">
+          <input class="form-control" formControlName="value" placeholder="valor para o marcador">
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-1">
+          <button id="cancelButton" class="btn btn-primary" (click)="router.navigateByUrl('/contacts')">
+            Cancelar
+          </button>
+        </div>
+        <div class="col-md-1">
+          <button id="saveButton" class="btn btn-primary" (click)="save()">
+            Gravar
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

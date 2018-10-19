@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* You can add global styles to this file, and also import other style files */\n"
+module.exports = ".footer {\n  position: fixed;\n  right: 0;\n  bottom:0;\n  padding: 10px;\n  width: 100%;\n}"
 
 /***/ }),
 

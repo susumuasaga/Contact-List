@@ -8,13 +8,13 @@ import { timeout$ } from '../asyncUtil';
 import { ContactService } from '../contact.service';
 import { contacts } from '../../testing/testDB';
 import { componentFactoryName } from '@angular/compiler';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Fields } from 'server/contact';
+import { FormControl, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { Fields, Contact } from 'server/contact';
 
 let fixture: ComponentFixture<ContactDetailComponent>;
 let component: ContactDetailComponent;
 let httpMock: HttpTestingController;
-let router: Router;
+let navigateSpy: jasmine.Spy;
 
 describe('ContactsDetailsComponent', () => {
 
@@ -37,7 +37,8 @@ describe('ContactsDetailsComponent', () => {
     fixture = TestBed.createComponent(ContactDetailComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.get(HttpTestingController);
-    router = TestBed.get(Router);
+    const router = TestBed.get(Router) as Router;
+    navigateSpy = router.navigateByUrl as jasmine.Spy;
     fixture.detectChanges();
   });
 
@@ -46,10 +47,35 @@ describe('ContactsDetailsComponent', () => {
   });
 
   describe('when navigate with no contact id', () => {
+
     it('should display an empty form', () => {
       expect(Page.title).toBe('Editar Contato');
-      expect(Page.contactName).toBe('');
-      expect(Object.keys(Page.fields).length).toBe(0);
+      expect(Page.contactNameControl.value).toBe('');
+      expect(Page.contactFieldsArray.length).toBe(0);
+    });
+
+    it('should navigate to contacts after click cancel', () => {
+      Page.cancelButton.click();
+      expect(navigateSpy.calls.count()).toBe(1);
+      const arg = navigateSpy.calls.mostRecent().args[0];
+      expect(arg).toBe('/contacts');
+    });
+
+    it('can edit and save contact', async () => {
+      Page.contactNameControl.setValue('Susumu Asaga');
+      Page.saveButton.click();
+      httpMock.expectOne(req => {
+        const contact = req.body as Contact;
+        return req.url === '/api/contacts' &&
+          req.method === 'POST' &&
+          contact.name === 'Susumu Asaga' &&
+          Object.keys(contact.fields).length === 0;
+      }).flush({});
+      await timeout$(1); // await save
+      fixture.detectChanges();
+      expect(navigateSpy.calls.count()).toBe(1);
+      const arg = navigateSpy.calls.mostRecent().args[0];
+      expect(arg).toBe('/contacts');
     });
   });
 });
@@ -59,19 +85,20 @@ class Page {
     return Page.query('h2').textContent.trim();
   }
 
-  static get contactName(): string {
-    return component.contactForm.get('name').value;
+  static get cancelButton(): HTMLButtonElement {
+    return Page.query('#cancelButton') as HTMLButtonElement;
   }
 
-  static get fields(): Fields {
-    const fields = {};
-    const fieldArray = component.contactForm.get('fields').value as
-      { name: string; value: string }[];
-    for (let i = 0; i < fieldArray.length; i++) {
-      const fa_i = fieldArray[i];
-      fields[fa_i.name] = fa_i.value;
-    }
-    return fields;
+  static get saveButton(): HTMLButtonElement {
+    return Page.query('#saveButton') as HTMLButtonElement;
+  }
+
+  static get contactNameControl(): FormControl {
+    return component.contactForm.get('name') as FormControl;
+  }
+
+  static get contactFieldsArray(): FormArray {
+    return component.contactFields;
   }
 
   private static query(selector: string): HTMLElement {
