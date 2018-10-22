@@ -13,11 +13,11 @@
       <div class="col-md-3" (click)="router.navigateByUrl('/detail/' + contact._id)">
         {{contact.name}}
       </div>
-      <a class="col-md-2" href="mailto:{{contact.fields['email']}}">
-        {{contact.fields['email']}}
+      <a class="col-md-2" href="mailto:{{contact.fields['E-mail']}}">
+        {{contact.fields['E-mail']}}
       </a>
       <div class="col-md-3" (click)="router.navigateByUrl('/detail/' + contact._id)">
-        {{contact.fields['telefone']}}
+        {{contact.fields['Telefone']}}
       </div>
       <div class="col-md-3" (click)="router.navigateByUrl('/detail/' + contact._id)">
         {{getCargoEmpresa(contact)}}

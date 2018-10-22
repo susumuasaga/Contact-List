@@ -99,9 +99,9 @@ describe('API', function () {
     let contact: Contact = {
       name: 'Andresa Rosa',
       fields: {
-        email: 'andresa.rosa@bravi.com.br',
-        telefone: '+55(48)3304-6336',
-        endereço: 'Rua Doutor Agostinho Sielski, 67'
+        'E-mail': 'andresa.rosa@bravi.com.br',
+        'Telefone': '+55(48)3304-6336',
+        'Endereço': 'Rua Doutor Agostinho Sielski, 67'
       }
     };
     const res = await superagent
@@ -127,14 +127,14 @@ describe('API', function () {
   });
 
   it('can add a field to existing contact', async () => {
-    // add field 'empresa'
+    // add field 'Empresa'
     const contact: Contact = {
       _id: id,
       name: 'James Hackett',
       fields: {
-        email: 'james.hackett@ford.com',
-        telefone: '+1(212)1234-5678',
-        empresa: 'Ford',
+        'E-mail': 'james.hackett@ford.com',
+        'Telefone': '+1(212)1234-5678',
+        'Empresa': 'Ford',
       }
     };
     const res = await superagent
@@ -143,16 +143,16 @@ describe('API', function () {
     expect(res.status).toBe(OK);
     // Check if updated
     const contactDoc = await contactModel.findById(id).exec();
-    expect(contactDoc.fields.get('empresa')).toBe('Ford');
+    expect(contactDoc.fields.get('Empresa')).toBe('Ford');
   });
 
   it('can remove a field from existing contact', async () => {
-    // remove field 'telefone'
+    // remove field 'Telefone'
     const contact: Contact = {
       _id: id,
       name: 'James Hackett',
       fields: {
-        email: 'james.hackett@ford.com'
+        'E-mail': 'james.hackett@ford.com'
       }
     };
     const res = await superagent
@@ -161,7 +161,7 @@ describe('API', function () {
     expect(res.status).toBe(OK);
     // Check if updated
     const contactDoc = await contactModel.findById(id).exec();
-    expect(contactDoc.fields.get('telefone')).toBeFalsy();
+    expect(contactDoc.fields.get('Telefone')).toBeFalsy();
   });
 
   it('should create a new contact ' +
@@ -171,9 +171,9 @@ describe('API', function () {
         _id: id,
         name: 'Andresa Rosa',
         fields: {
-          email: 'andresa.rosa@bravi.com.br',
-          telefone: '+55(48)3304-6336',
-          endereço: 'Rua Doutor Agostinho Sielski, 67'
+          'E-mail': 'andresa.rosa@bravi.com.br',
+          'Telefone': '+55(48)3304-6336',
+          'Endereço': 'Rua Doutor Agostinho Sielski, 67'
         }
       };
       const res = await superagent

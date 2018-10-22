@@ -10,11 +10,12 @@ import { contacts } from '../../testing/testDB';
 import { componentFactoryName } from '@angular/compiler';
 import { FormControl, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { Fields, Contact } from 'server/contact';
-import { StoreModule, Store } from '@ngrx/store';
+import { StoreModule, Store, select } from '@ngrx/store';
 import { reducer } from '../reducer';
 import { ActivatedRouteStub } from 'src/testing/activated-route-stub';
 import { State } from '../state';
 import { LoadContacts } from '../actions';
+import { take } from 'rxjs/operators';
 
 let fixture: ComponentFixture<ContactDetailComponent>;
 let component: ContactDetailComponent;
@@ -24,6 +25,8 @@ let activatedRoute: ActivatedRouteStub;
 let store: Store<State>;
 
 describe('ContactsDetailsComponent', () => {
+  beforeAll(() => {
+  });
 
   beforeEach(async () => {
     activatedRoute = new ActivatedRouteStub();
@@ -33,7 +36,7 @@ describe('ContactsDetailsComponent', () => {
       providers: [
         ContactService,
         { provide: Router, useValue: routerSpy },
-        { provide: ActivatedRoute, useValue: activatedRoute}
+        { provide: ActivatedRoute, useValue: activatedRoute }
       ],
       declarations: [ContactDetailComponent],
       imports: [
@@ -74,41 +77,23 @@ describe('ContactsDetailsComponent', () => {
       }
     });
 
-    it('should navigate to contacts after click cancel', () => {
+    it('should navigate back after click cancel', () => {
       Page.cancelButton.click();
-      expect(navigateSpy.calls.count()).toBe(1);
-      const arg = navigateSpy.calls.mostRecent().args[0];
-      expect(arg).toBe('/contacts');
+      expect(navigatedTo()).toBe('/contacts');
     });
 
-    it('should add a field after click addFieldButton', () => {
+    it('can add a field to the contact', async () => {
+      contact.fields['Observações'] = 'Velho amigo';
       Page.addFieldButton.click();
-      fixture.detectChanges();
-      expect(Page.contactFieldsArray.length).toBe(5);
+      Page.setArrayLabel(4, 'Observações');
+      Page.setArrayValue(4, 'Velho amigo');
+      await verifySave('PUT', contact);
     });
 
-    it('should delete a field after click delFieldButton', () => {
+    it('can delete a field from the contact', async () => {
+      delete contact.fields['E-mail'];
       Page.getDelFieldButton(0).click();
-      fixture.detectChanges();
-      expect(Page.contactFieldsArray.length).toBe(3);
-    });
-
-    it('can edit and save contact' , async () => {
-      Page.setArrayValue(0, 'james.hackett@gmail.com');
-      contact.fields['email'] = 'james.hackett@gmail.com';
-      fixture.detectChanges();
-      Page.saveButton.click();
-      httpMock.expectOne(req => {
-        const c = req.body as Contact;
-        return req.url === '/api/contacts/0001' &&
-          req.method === 'PUT' &&
-          c._id === '0001';
-      }).flush(contact);
-      await timeout$(1000); // await save
-      // should navigate to /contacts
-      expect(navigateSpy.calls.count()).toBe(1);
-      const arg = navigateSpy.calls.mostRecent().args[0];
-      expect(arg).toBe('/contacts');
+      await verifySave('PUT', contact);
     });
   });
 
@@ -129,27 +114,14 @@ describe('ContactsDetailsComponent', () => {
         _id: '0006',
         name: 'Sundar Pichai',
         fields: {
-          email: 'sundar.pichai@google.com'
+          'E-mail': 'sundar.pichai@google.com'
         }
       };
       Page.contactNameControl.setValue(contact.name);
       Page.addFieldButton.click();
-      fixture.detectChanges();
-      Page.setArrayLabel(0, 'email');
-      Page.setArrayValue(0, contact.fields['email']);
-      fixture.detectChanges();
-      Page.saveButton.click();
-      httpMock.expectOne(req => {
-        const c = req.body as Contact;
-        return req.url === '/api/contacts' &&
-          req.method === 'POST' &&
-          c.name === contact.name;
-      }).flush(contact);
-      await timeout$(1000); // await save
-      fixture.detectChanges();
-      expect(navigateSpy.calls.count()).toBe(1);
-      const arg = navigateSpy.calls.mostRecent().args[0];
-      expect(arg).toBe('/contacts');
+      Page.setArrayLabel(0, 'E-mail');
+      Page.setArrayValue(0, contact.fields['E-mail']);
+      await verifySave('POST', contact);
     });
   });
 });
@@ -159,11 +131,44 @@ function createComponent() {
   component = fixture.componentInstance;
   httpMock = TestBed.get(HttpTestingController);
   store = TestBed.get(Store);
-  const router = TestBed.get(Router) as Router;
-  navigateSpy = router.navigateByUrl as jasmine.Spy;
   // initialize store
   store.dispatch(new LoadContacts(contacts.slice()));
+  const router = TestBed.get(Router) as Router;
+  navigateSpy = router.navigateByUrl as jasmine.Spy;
   fixture.detectChanges();
+}
+
+function navigatedTo(): string {
+  return navigateSpy.calls.mostRecent().args[0];
+}
+
+async function getState() {
+  let state: State;
+  await store.pipe(select('state'), take(1)).forEach(s => state = s);
+  return state;
+}
+
+async function verifySave(method: 'PUT' | 'POST', contact: Contact) {
+  fixture.detectChanges();
+  Page.saveButton.click();
+  httpMock.expectOne(req => {
+    const c = req.body as Contact;
+    if (method === 'PUT') {
+      return req.url === '/api/contacts/0001' &&
+        req.method === 'PUT' &&
+        c._id === '0001';
+    }
+    return req.url === '/api/contacts' &&
+      req.method === 'POST' && !c._id;
+  }).flush(contact);
+  await timeout$(1000); // await save
+  const state = await getState();
+  const cs = state.contacts;
+  const index = cs.findIndex(c => c._id === contact._id);
+  const n1 = Object.keys(cs[index].fields).length;
+  const n2 = Object.keys(contact.fields).length;
+  expect(n1).toBe(n2);
+  expect(navigatedTo()).toBe('/contacts');
 }
 
 class Page {
@@ -181,7 +186,7 @@ class Page {
 
   static getDelFieldButton(i: number): HTMLButtonElement {
     return Page.formRows[i].lastElementChild.firstElementChild as
-    HTMLButtonElement;
+      HTMLButtonElement;
   }
 
   static get cancelButton(): HTMLButtonElement {
@@ -202,12 +207,12 @@ class Page {
 
   static setArrayLabel(index: number, value: string): void {
     Page.contactFieldsArray
-    .controls[index].get('label').setValue(value);
+      .controls[index].get('label').setValue(value);
   }
 
   static setArrayValue(index: number, value: string): void {
     Page.contactFieldsArray
-    .controls[index].get('value').setValue(value);
+      .controls[index].get('value').setValue(value);
   }
 
   private static query(selector: string): HTMLElement {

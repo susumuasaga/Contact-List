@@ -70,10 +70,10 @@ describe('ContactsComponent', () => {
       const contact = contacts[0];
       const fields = contact.fields;
       expect(Page.getRowCol(0, 0)).toBe(contact.name);
-      expect(Page.getRowCol(0, 1)).toBe(fields['email']);
-      expect(Page.getRowCol(0, 2)).toBe(fields['telefone']);
+      expect(Page.getRowCol(0, 1)).toBe(fields['E-mail']);
+      expect(Page.getRowCol(0, 2)).toBe(fields['Telefone']);
       expect(Page.getRowCol(0, 3))
-        .toBe(`${fields['cargo']}, ${fields['empresa']}`);
+        .toBe(`${fields['Cargo']}, ${fields['Empresa']}`);
     });
 
     it('should navigate when add button is clicked', async () => {
@@ -98,7 +98,7 @@ describe('ContactsComponent', () => {
         expect(Page.getRowCol(0, 0)).toBe(contacts[1].name);
       });
 
-    it('should navigate to edit a contact ' +
+    it('should navigate to contact details ' +
       'when the contact is clicked', async () => {
         Page.rowColElem(0, 0).click();
         const spy = router.navigateByUrl as jasmine.Spy;

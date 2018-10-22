@@ -46,8 +46,8 @@ export class ContactsComponent implements OnInit {
 
   getCargoEmpresa(contact: Contact): string {
     const fields = contact.fields;
-    const cargo = fields['cargo'];
-    const empresa = fields['empresa'];
+    const cargo = fields['Cargo'];
+    const empresa = fields['Empresa'];
     if (cargo && empresa) {
       return cargo + ', ' + empresa;
     }

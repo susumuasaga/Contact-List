@@ -321,7 +321,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h2 *ngIf=\"contactId\">\n    Editar Contato\n  </h2>\n  <h2 *ngIf=\"!contactId\">\n    Criar Contato\n  </h2>\n  <form [formGroup]=\"contactForm\">\n    <div class=\"form-group\">\n      <label>\n        Nome\n      </label>\n      <input class=\"form-control\" formControlName=\"name\" placeholder=\"nome\" required>\n    </div>\n    <div formArrayName=\"fields\" *ngFor=\"let field of contactFields.controls; let i=index\">\n      <div class=\"form-row\" [formGroupName]=\"i\">\n        <div class=\"col-md-3\">\n          <input class=\"form-control\" formControlName=\"label\" placeholder=\"Tipo de informação\" required>\n        </div>\n        <div class=\"col-md-8\">\n          <input class=\"form-control\" formControlName=\"value\" placeholder=\"Informação\">\n        </div>\n        <div class=\"col-md-1\">\n          <button type=\"button\" class=\"btn danger\" (click)=\"delField(i)\" ngbTooltip=\"Remover\">\n            <i class=\"fas fa-trash\"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n    <div class=\"form-row\">\n      <div class=\"col-md-11\"></div>\n      <div class=\"col-md-1\">\n        <button class=\"btn\" id=\"addFieldButton primary\" (click)=\"addField()\" ngbTooltip=\"Adicionar informação\">\n          <i class=\"fas fa-plus-circle\"></i>\n        </button>\n      </div>\n    </div>\n    <div class=\"footer\">\n      <div class=\"float-right\">\n        <button id=\"cancelButton\" class=\"btn btn-primary\" (click)=\"router.navigateByUrl('/contacts')\">\n          CANCELAR\n        </button>\n        &emsp;\n        <button id=\"saveButton\" class=\"btn btn-primary\" (click)=\"save()\" [disabled]=\"!contactForm.valid\">\n          SALVAR\n        </button>\n      </div>\n    </div>\n  </form>\n</div>"
+module.exports = "<div class=\"container\">\n  <h2 *ngIf=\"contactId\">\n    Editar Contato\n  </h2>\n  <h2 *ngIf=\"!contactId\">\n    Criar Contato\n  </h2>\n  <form [formGroup]=\"contactForm\">\n    <div class=\"form-group\">\n      <label>\n        Nome\n      </label>\n      <input class=\"form-control\" formControlName=\"name\" placeholder=\"nome\" required>\n    </div>\n    <div formArrayName=\"fields\" *ngFor=\"let field of contactFields.controls; let i=index\">\n      <div class=\"form-row\" [formGroupName]=\"i\">\n        <div class=\"col-md-3\">\n          <input class=\"form-control\" formControlName=\"label\" placeholder=\"Tipo de informação\" required>\n        </div>\n        <div class=\"col-md-8\">\n          <input class=\"form-control\" formControlName=\"value\" placeholder=\"Informação\">\n        </div>\n        <div class=\"col-md-1\">\n          <button type=\"button\" class=\"btn danger\" (click)=\"delField(i)\" ngbTooltip=\"Remover\">\n            <i class=\"fas fa-trash\"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n    <div class=\"form-row\">\n      <div class=\"col-md-11\"></div>\n      <div class=\"col-md-1\">\n        <button class=\"btn primary\" id=\"addFieldButton\" (click)=\"addField()\" ngbTooltip=\"Adicionar informação\">\n          <i class=\"fas fa-plus-circle\"></i>\n        </button>\n      </div>\n    </div>\n    <div class=\"footer\">\n      <div class=\"float-right\">\n        <button id=\"cancelButton\" class=\"btn btn-primary\" (click)=\"router.navigateByUrl('/contacts')\">\n          CANCELAR\n        </button>\n        &emsp;\n        <button id=\"saveButton\" class=\"btn btn-primary\" (click)=\"save()\" [disabled]=\"!contactForm.valid\">\n          SALVAR\n        </button>\n      </div>\n    </div>\n  </form>\n</div>"
 
 /***/ }),
 
@@ -341,6 +341,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../contact.service */ "./src/app/contact.service.ts");
 /* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../actions */ "./src/app/actions.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -391,9 +392,9 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
+
 var ContactDetailComponent = /** @class */ (function () {
     function ContactDetailComponent(fb, router, contactService, route, store) {
-        var _this = this;
         this.fb = fb;
         this.router = router;
         this.contactService = contactService;
@@ -403,7 +404,12 @@ var ContactDetailComponent = /** @class */ (function () {
             name: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required],
             fields: this.fb.array([])
         });
-        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_4__["select"])('state')).forEach(function (state) {
+    }
+    ContactDetailComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        // This code should run once and for all,
+        // therefore just sample current state don't subscribe
+        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_4__["select"])('state'), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["take"])(1)).forEach(function (state) {
             var id = _this.contactId =
                 _this.route.snapshot.paramMap.get('id');
             var contacts = state.contacts;
@@ -422,8 +428,7 @@ var ContactDetailComponent = /** @class */ (function () {
                 }));
             }
         });
-    }
-    ContactDetailComponent.prototype.ngOnInit = function () { };
+    };
     Object.defineProperty(ContactDetailComponent.prototype, "contactFields", {
         get: function () {
             return this.contactForm.get('fields');
@@ -612,7 +617,7 @@ module.exports = "#addButton {\n  font-size: 50px;\n  color: #e91e63;\n}\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>\n  Contatos ({{contacts.length}})\n</h2>\n<h2 *ngIf=\"isUpdating && contacts.length === 0\">\n  Carregando...\n</h2>\n<h2 *ngIf=\"!isUpdating && contacts.length === 0\">\n  Sem contatos.\n</h2>\n<ul class=\"list-group\" [ngStyle]=\"{opacity: isUpdating? 0.5: 1}\">\n  <li class=\"list-group-item\" *ngFor=\"let contact of contacts; index as i\">\n    <div class=\"row\">\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{contact.name}}\n      </div>\n      <a class=\"col-md-2\" href=\"mailto:{{contact.fields['email']}}\">\n        {{contact.fields['email']}}\n      </a>\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{contact.fields['telefone']}}\n      </div>\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{getCargoEmpresa(contact)}}\n      </div>\n      <div class=\"col-md-1\">\n        <button type=\"button\" class=\"btn danger\" (click)=\"delContact(i)\" ngbTooltip=\"Excluir\">\n          <i class=\"fas fa-trash\"></i>\n        </button>\n      </div>\n    </div>\n  </li>\n</ul>\n<div class=\"float-right\">\n    <button type=\"button\" class=\"btn\" id=\"addButton\" (click)=\"router.navigateByUrl('/detail')\" ngbTooltip=\"Criar novo contato\">\n      <i class='fas fa-plus-circle'></i>\n    </button>\n</div>\n"
+module.exports = "<h2>\n  Contatos ({{contacts.length}})\n</h2>\n<h2 *ngIf=\"isUpdating && contacts.length === 0\">\n  Carregando...\n</h2>\n<h2 *ngIf=\"!isUpdating && contacts.length === 0\">\n  Sem contatos.\n</h2>\n<ul class=\"list-group\" [ngStyle]=\"{opacity: isUpdating? 0.5: 1}\">\n  <li class=\"list-group-item\" *ngFor=\"let contact of contacts; index as i\">\n    <div class=\"row\">\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{contact.name}}\n      </div>\n      <a class=\"col-md-2\" href=\"mailto:{{contact.fields['E-mail']}}\">\n        {{contact.fields['E-mail']}}\n      </a>\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{contact.fields['Telefone']}}\n      </div>\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{getCargoEmpresa(contact)}}\n      </div>\n      <div class=\"col-md-1\">\n        <button type=\"button\" class=\"btn danger\" (click)=\"delContact(i)\" ngbTooltip=\"Excluir\">\n          <i class=\"fas fa-trash\"></i>\n        </button>\n      </div>\n    </div>\n  </li>\n</ul>\n<div class=\"float-right\">\n    <button type=\"button\" class=\"btn\" id=\"addButton\" (click)=\"router.navigateByUrl('/detail')\" ngbTooltip=\"Criar novo contato\">\n      <i class='fas fa-plus-circle'></i>\n    </button>\n</div>\n"
 
 /***/ }),
 
@@ -729,8 +734,8 @@ var ContactsComponent = /** @class */ (function () {
     };
     ContactsComponent.prototype.getCargoEmpresa = function (contact) {
         var fields = contact.fields;
-        var cargo = fields['cargo'];
-        var empresa = fields['empresa'];
+        var cargo = fields['Cargo'];
+        var empresa = fields['Empresa'];
         if (cargo && empresa) {
             return cargo + ', ' + empresa;
         }
@@ -770,7 +775,7 @@ var ContactsComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reducer", function() { return reducer; });
 function reducer(state, action) {
-    if (state === void 0) { state = { isUpdating: false, error: null, contacts: [] }; }
+    if (state === void 0) { state = { isUpdating: true, error: null, contacts: [] }; }
     if (action.reducer) {
         return action.reducer(state);
     }

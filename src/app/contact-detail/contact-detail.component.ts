@@ -6,6 +6,7 @@ import { ContactService } from '../contact.service';
 import { Store, select } from '@ngrx/store';
 import { State } from '../state';
 import { StartUpdate, UpdContact, SuccessUpdate, AddContact } from '../actions';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contact-detail',
@@ -26,8 +27,12 @@ export class ContactDetailComponent implements OnInit {
     private contactService: ContactService,
     public route: ActivatedRoute,
     private store: Store<State>
-  ) {
-    this.store.pipe<State>(select('state')).forEach(state => {
+  ) { }
+
+  ngOnInit() {
+    // This code should run once and for all,
+    // therefore just sample current state don't subscribe
+    this.store.pipe<State>(select('state'), take(1)).forEach(state => {
       const id = this.contactId =
         this.route.snapshot.paramMap.get('id');
       const contacts = state.contacts;
@@ -46,8 +51,6 @@ export class ContactDetailComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit() { }
 
   get contactFields(): FormArray {
     return this.contactForm.get('fields') as FormArray;

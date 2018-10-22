@@ -8,36 +8,36 @@ export const contacts: Contact[] = [{
   _id: '0001',
   name: 'James Hackett',
   fields: {
-    email: 'james.hackett@ford.com',
-    telefone: '+1(212)1234-5678',
-    cargo: 'CEO',
-    empresa: 'Ford'
+    'E-mail': 'james.hackett@ford.com',
+    'Telefone': '+1(212)1234-5678',
+    'Cargo': 'CEO',
+    'Empresa': 'Ford'
   }
 }, {
   _id: '0002',
   name: 'Mark Parker',
   fields: {
-    cargo: 'CEO',
-    empresa: 'Nike'
+    'Cargo': 'CEO',
+    'Empresa': 'Nike'
   }
 }, {
   _id: '0003',
   name: 'Paul Polman',
   fields: {
-    email: 'paul.polman@unilever.com'
+    'E-mail': 'paul.polman@unilever.com'
   }
 }, {
   _id: '0004',
   name: 'Susumu Asaga',
   fields: {
-    email: 'susumu.asaga@gmail.com',
-    telefone: '+55(11)98430-9134',
-    cargo: 'Engenheiro de Software Senior'
+    'E-mail': 'susumu.asaga@gmail.com',
+    'Telefone': '+55(11)98430-9134',
+    'Cargo': 'Engenheiro de Software Senior'
   }
 }, {
   _id: '0005',
   name: 'Tim Cook',
   fields: {
-    telefone: '+1(212)9876-5432'
+    'Telefone': '+1(212)9876-5432'
   }
 }];
