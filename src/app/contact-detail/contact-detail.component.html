@@ -1,37 +1,49 @@
 <div class="container">
-  <h2>
+  <h2 *ngIf="contactId">
     Editar Contato
+  </h2>
+  <h2 *ngIf="!contactId">
+    Criar Contato
   </h2>
   <form [formGroup]="contactForm">
     <div class="form-group">
       <label>
         Nome
       </label>
-      <input class="form-control" formControlName="name" placeholder="nome">
+      <input class="form-control" formControlName="name" placeholder="nome" required>
     </div>
     <div formArrayName="fields" *ngFor="let field of contactFields.controls; let i=index">
       <div class="form-row" [formGroupName]="i">
-        <div class="col-md-5">
-          <input class="form-control" formControlName="label" placeholder="marcador">
+        <div class="col-md-3">
+          <input class="form-control" formControlName="label" placeholder="Tipo de informação" required>
         </div>
-        <div class="col-md-6">
-          <input class="form-control" formControlName="value" placeholder="valor para o marcador">
+        <div class="col-md-8">
+          <input class="form-control" formControlName="value" placeholder="Informação">
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="btn danger" (click)="delField(i)" ngbTooltip="Remover">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
     </div>
+    <div class="form-row">
+      <div class="col-md-11"></div>
+      <div class="col-md-1">
+        <button class="btn" id="addFieldButton primary" (click)="addField()" ngbTooltip="Adicionar informação">
+          <i class="fas fa-plus-circle"></i>
+        </button>
+      </div>
+    </div>
     <div class="footer">
-      <div class="row">
-        <div class="col-md-10"></div>
-        <div class="col-md-1">
-          <button id="cancelButton" class="btn btn-primary" (click)="router.navigateByUrl('/contacts')">
-            Cancelar
-          </button>
-        </div>
-        <div class="col-md-1">
-          <button id="saveButton" class="btn btn-primary" (click)="save()">
-            Gravar
-          </button>
-        </div>
+      <div class="float-right">
+        <button id="cancelButton" class="btn btn-primary" (click)="router.navigateByUrl('/contacts')">
+          CANCELAR
+        </button>
+        &emsp;
+        <button id="saveButton" class="btn btn-primary" (click)="save()" [disabled]="!contactForm.valid">
+          SALVAR
+        </button>
       </div>
     </div>
   </form>

@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".footer {\n  position: fixed;\n  right: 0;\n  bottom:0;\n  padding: 10px;\n  width: 100%;\n}"
+module.exports = ".footer {\n  position: fixed;\n  right: 0;\n  bottom:0;\n  padding: 10px;\n  width: 100%;\n}\n.danger {\n  color: #dc3545;\n}\n.primary {\n  color: #007bff;\n}"
 
 /***/ }),
 

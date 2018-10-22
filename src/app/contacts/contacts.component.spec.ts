@@ -7,14 +7,14 @@ import { ContactsComponent } from './contacts.component';
 import { timeout$ } from '../asyncUtil';
 import { ContactService } from '../contact.service';
 import { contacts } from '../../testing/testDB';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from '../reducer';
+
+let fixture: ComponentFixture<ContactsComponent>;
+let httpMock: HttpTestingController;
+let router: Router;
 
 describe('ContactsComponent', () => {
-  let fixture: ComponentFixture<ContactsComponent>;
-  let rowEls: HTMLElement[];
-  let addButton: HTMLButtonElement;
-  let httpMock: HttpTestingController;
-  let router: Router;
-
   beforeEach(async () => {
     const routerSpy =
       jasmine.createSpyObj('Router', ['navigateByUrl']);
@@ -24,79 +24,129 @@ describe('ContactsComponent', () => {
         { provide: Router, useValue: routerSpy }
       ],
       declarations: [ContactsComponent],
-      imports: [HttpClientTestingModule, NgbModule.forRoot()]
+      imports: [
+        HttpClientTestingModule,
+        NgbModule.forRoot(),
+        StoreModule.forRoot({ state: reducer })
+      ]
     })
       .compileComponents();
     fixture = TestBed.createComponent(ContactsComponent);
     httpMock = TestBed.get(HttpTestingController);
     router = TestBed.get(Router);
     fixture.detectChanges();
-    // httpMock should return a copy of the original contacts
-    httpMock.expectOne({
-      url: '/api/contacts', method: 'GET'
-    }).flush(contacts.slice());
-    await timeout$(1); // await load contacts
-    fixture.detectChanges();
-    const fixtureNE = fixture.nativeElement;
-    rowEls = fixtureNE.querySelectorAll('.row');
-    addButton = fixtureNE.querySelector('#addButton');
   });
 
   afterEach(() => {
     httpMock.verify();
   });
 
-  it('should present list of contacts', async () => {
-    // list should have 6 rows:
-    // heading and 5 items
-    expect(rowEls.length).toBe(6);
-    const heading =
-      rowEls[0].firstElementChild.firstElementChild.textContent.trim();
-    expect(heading).toBe('Contatos (5)');
-    for (let i = 0; i < contacts.length; i++) {
-      const contactName =
-        rowEls[i + 1].firstElementChild.textContent.trim();
-      expect(contactName).toBe(contacts[i].name);
-    }
-  });
-
-  it('should navigate when add button is clicked', async () => {
-    addButton.click();
-    const spy = router.navigateByUrl as jasmine.Spy;
-    expect(spy.calls.count()).toBe(1);
-    const arg = spy.calls.mostRecent().args[0];
-    expect(arg).toBe('/detail');
-  });
-
-  it('should delete a contact ' +
-    'when del button is clicked', async () => {
-      const delButton =
-        rowEls[1].lastElementChild.firstElementChild as
-        HTMLButtonElement;
-      delButton.click();
+  describe('before loading contacts', () => {
+    it('should display loading message', async () => {
+      expect(Page.loadingMsg).toBe('Carregando...');
+      // if there is no contact, should display empty message
       httpMock.expectOne({
-        url: '/api/contacts/0001', method: 'DELETE'
-      }).flush({});
-      await timeout$(1); // await delete
+        url: '/api/contacts', method: 'GET'
+      }).flush([]);
+      await timeout$(1000); // await load contacts
       fixture.detectChanges();
-      const fixtureNE = fixture.nativeElement;
-      rowEls = fixtureNE.querySelectorAll('.row');
-      // list should have 5 rows:
-      // heading and 4 items, first deleted
-      expect(rowEls.length).toBe(5);
-      for (let i = 1; i < contacts.length; i++) {
-        const contactName =
-          rowEls[i].firstElementChild.textContent.trim();
-        expect(contactName).toBe(contacts[i].name);
-      }
+      expect(Page.loadingMsg).toBe('Sem contatos.');
+    });
+  });
+
+  describe('after loading contacts', () => {
+    beforeEach(async () => {
+      httpMock.expectOne({
+        url: '/api/contacts', method: 'GET'
+      }).flush(contacts.slice());
+      await timeout$(1000); // await load contacts
+      fixture.detectChanges();
     });
 
-  it('should navigate to edit a contact ' +
-    'when the contact is clicked', async () => {
-      rowEls[1].click();
+    it('should display contacts', async () => {
+      // list should have 5 rows:
+      expect(Page.heading).toBe('Contatos (5)');
+      expect(Page.rows.length).toBe(5);
+      const contact = contacts[0];
+      const fields = contact.fields;
+      expect(Page.getRowCol(0, 0)).toBe(contact.name);
+      expect(Page.getRowCol(0, 1)).toBe(fields['email']);
+      expect(Page.getRowCol(0, 2)).toBe(fields['telefone']);
+      expect(Page.getRowCol(0, 3))
+        .toBe(`${fields['cargo']}, ${fields['empresa']}`);
+    });
+
+    it('should navigate when add button is clicked', async () => {
+      Page.addButton.click();
       const spy = router.navigateByUrl as jasmine.Spy;
       expect(spy.calls.count()).toBe(1);
       const arg = spy.calls.mostRecent().args[0];
-      expect(arg).toBe('/detail/0001');
+      expect(arg).toBe('/detail');
     });
+
+    it('should delete a contact ' +
+      'when del button is clicked', async () => {
+        Page.delButton(0).click();
+        fixture.detectChanges();
+        httpMock.expectOne({
+          url: '/api/contacts/0001', method: 'DELETE'
+        }).flush({});
+        await timeout$(1000); // await delete
+        fixture.detectChanges();
+        // list should have 4 rows.
+        expect(Page.rows.length).toBe(4);
+        expect(Page.getRowCol(0, 0)).toBe(contacts[1].name);
+      });
+
+    it('should navigate to edit a contact ' +
+      'when the contact is clicked', async () => {
+        Page.rowColElem(0, 0).click();
+        const spy = router.navigateByUrl as jasmine.Spy;
+        expect(spy.calls.count()).toBe(1);
+        const arg = spy.calls.mostRecent().args[0];
+        expect(arg).toBe('/detail/0001');
+      });
+  });
 });
+
+class Page {
+  private static get headings(): HTMLElement[] {
+    return Page.queryAll('h2');
+  }
+  static get heading(): string {
+    return Page.headings[0].textContent.trim();
+  }
+  static get loadingMsg(): string {
+    if (Page.headings.length <= 1) {
+      return '';
+    }
+    return Page.headings[1].textContent.trim();
+  }
+
+  static get rows(): HTMLElement[] {
+    return Page.queryAll('.row');
+  }
+  static rowColElem(i: number, j: number): HTMLElement {
+    return this.rows[i].children[j] as HTMLElement;
+  }
+  static getRowCol(i: number, j: number): string {
+    return this.rowColElem(i, j).textContent.trim();
+  }
+  static delButton(i: number): HTMLElement {
+    return this.rows[i].lastElementChild.firstElementChild as
+      HTMLElement;
+  }
+
+  static get addButton(): HTMLElement {
+    return Page.query('#addButton');
+  }
+
+  private static query(selector: string): HTMLElement {
+    return fixture.nativeElement.querySelector(selector);
+  }
+
+  private static queryAll(selector: string): HTMLElement[] {
+    return fixture.nativeElement.querySelectorAll(selector);
+  }
+}
+

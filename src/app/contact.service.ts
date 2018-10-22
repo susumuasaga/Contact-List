@@ -23,19 +23,25 @@ export class ContactService {
   }
 
   /** DELETE the contact from the server */
-  deleteContact(contact: Contact): Promise<void> {
+  delContact(contact: Contact): Promise<void> {
     return this.http.delete(`${this.contactsUrl}/${contact._id}`)
-      .pipe(catchError(this.handleError('deleteContact', null)))
+      .pipe(catchError(this.handleError('delContact', null)))
       .toPromise();
   }
 
   /** POST: add a new contact to the server */
-  createContact(contact: Contact): Promise<Contact> {
+  addContact(contact: Contact): Promise<Contact> {
     return this.http.post(this.contactsUrl, contact)
-    .pipe(catchError(this.handleError('createContact', null)))
-    .toPromise();
-}
+      .pipe(catchError(this.handleError('createContact', null)))
+      .toPromise();
+  }
 
+  /** PUT: update the contact on the server */
+  updContact(contact: Contact): Promise<Contact> {
+    return this.http.put(`${this.contactsUrl}/${contact._id}`, contact)
+      .pipe(catchError(this.handleError('updateContact', null)))
+      .toPromise();
+  }
   /**
    * Handle Http operation that failed.
    * Let the app continue.

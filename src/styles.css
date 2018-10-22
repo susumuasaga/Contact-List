@@ -5,3 +5,10 @@
   padding: 10px;
   width: 100%;
 }
+.danger {
+  color: #dc3545;
+}
+
+.primary {
+  color: #007bff;
+}

@@ -1,39 +1,37 @@
-<div class="row">
-  <div class="col-md-12">
-    <h2>
-      Contatos ({{contacts.length}})
-    </h2>
-  </div>
-</div>
-<ul class="list-group">
-  <li class="list-group-item"
-  *ngFor="let contact of contacts"
-  (click)="router.navigateByUrl('/detail/' + contact._id)">
+<h2>
+  Contatos ({{contacts.length}})
+</h2>
+<h2 *ngIf="isUpdating && contacts.length === 0">
+  Carregando...
+</h2>
+<h2 *ngIf="!isUpdating && contacts.length === 0">
+  Sem contatos.
+</h2>
+<ul class="list-group" [ngStyle]="{opacity: isUpdating? 0.5: 1}">
+  <li class="list-group-item" *ngFor="let contact of contacts; index as i">
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3" (click)="router.navigateByUrl('/detail/' + contact._id)">
         {{contact.name}}
       </div>
-      <div class="col-md-3">
+      <a class="col-md-2" href="mailto:{{contact.fields['email']}}">
         {{contact.fields['email']}}
-      </div>
-      <div class="col-md-2">
+      </a>
+      <div class="col-md-3" (click)="router.navigateByUrl('/detail/' + contact._id)">
         {{contact.fields['telefone']}}
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3" (click)="router.navigateByUrl('/detail/' + contact._id)">
         {{getCargoEmpresa(contact)}}
       </div>
       <div class="col-md-1">
-        <button type="button" class="btn btn-danger" (click)="deleteContact(contact)" ngbTooltip="Remover contato">
+        <button type="button" class="btn danger" (click)="delContact(i)" ngbTooltip="Excluir">
           <i class="fas fa-trash"></i>
         </button>
       </div>
     </div>
   </li>
 </ul>
-<div class="footer">
-  <div class="float-right">
-    <button type="button" class="btn" id="addButton" (click)="router.navigateByUrl('/detail')" ngbTooltip="Criar contato">
+<div class="float-right">
+    <button type="button" class="btn" id="addButton" (click)="router.navigateByUrl('/detail')" ngbTooltip="Criar novo contato">
       <i class='fas fa-plus-circle'></i>
     </button>
-  </div>
 </div>

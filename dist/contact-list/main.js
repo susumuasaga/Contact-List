@@ -23,6 +23,113 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 
 /***/ }),
 
+/***/ "./src/app/actions.ts":
+/*!****************************!*\
+  !*** ./src/app/actions.ts ***!
+  \****************************/
+/*! exports provided: StartUpdate, LoadContacts, DelContact, UpdContact, AddContact, SuccessUpdate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StartUpdate", function() { return StartUpdate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoadContacts", function() { return LoadContacts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DelContact", function() { return DelContact; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdContact", function() { return UpdContact; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddContact", function() { return AddContact; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SuccessUpdate", function() { return SuccessUpdate; });
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+var StartUpdate = /** @class */ (function () {
+    function StartUpdate() {
+        this.type = 'StartUpdate';
+    }
+    StartUpdate.prototype.reducer = function (state) {
+        return __assign({}, state, { isUpdating: true, error: null });
+    };
+    return StartUpdate;
+}());
+
+var LoadContacts = /** @class */ (function () {
+    function LoadContacts(contacts) {
+        this.contacts = contacts;
+        this.type = 'LoadContacts';
+    }
+    LoadContacts.prototype.reducer = function (state) {
+        return __assign({}, state, { contacts: this.contacts });
+    };
+    return LoadContacts;
+}());
+
+var DelContact = /** @class */ (function () {
+    function DelContact(index) {
+        this.index = index;
+        this.type = 'DelContact';
+    }
+    DelContact.prototype.reducer = function (state) {
+        var olds = state.contacts;
+        var i = this.index;
+        var contacts = olds.slice(0, i).concat(olds.slice(i + 1));
+        return __assign({}, state, { contacts: contacts });
+    };
+    return DelContact;
+}());
+
+var UpdContact = /** @class */ (function () {
+    function UpdContact(index, contact) {
+        this.index = index;
+        this.contact = contact;
+        this.type = 'UpdContact';
+    }
+    UpdContact.prototype.reducer = function (state) {
+        var olds = state.contacts;
+        var i = this.index;
+        var contacts = olds.slice(0, i).concat([this.contact], olds.slice(i + 1));
+        return __assign({}, state, { contacts: contacts });
+    };
+    return UpdContact;
+}());
+
+var AddContact = /** @class */ (function () {
+    function AddContact(contact) {
+        this.contact = contact;
+        this.type = 'AddContact';
+    }
+    AddContact.prototype.reducer = function (state) {
+        var _this = this;
+        var olds = state.contacts;
+        var i = olds.findIndex(function (contact) {
+            return contact.name > _this.contact.name;
+        });
+        if (i < 0) {
+            i = olds.length;
+        }
+        var contacts = olds.slice(0, i).concat([this.contact], olds.slice(i));
+        return __assign({}, state, { contacts: contacts });
+    };
+    return AddContact;
+}());
+
+var SuccessUpdate = /** @class */ (function () {
+    function SuccessUpdate() {
+        this.type = 'SuccessUpdate';
+    }
+    SuccessUpdate.prototype.reducer = function (state) {
+        return __assign({}, state, { isUpdating: false });
+    };
+    return SuccessUpdate;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/app-routing.module.ts":
 /*!***************************************!*\
   !*** ./src/app/app-routing.module.ts ***!
@@ -49,6 +156,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 var routes = [
     { path: '', redirectTo: '/contacts', pathMatch: 'full' },
+    { path: 'detail', component: _contact_detail_contact_detail_component__WEBPACK_IMPORTED_MODULE_3__["ContactDetailComponent"] },
     { path: 'detail/:id', component: _contact_detail_contact_detail_component__WEBPACK_IMPORTED_MODULE_3__["ContactDetailComponent"] },
     { path: 'contacts', component: _contacts_contacts_component__WEBPACK_IMPORTED_MODULE_2__["ContactsComponent"] }
 ];
@@ -145,12 +253,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./reducer */ "./src/app/reducer.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -175,7 +287,8 @@ var AppModule = /** @class */ (function () {
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpClientModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_7__["AppRoutingModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ReactiveFormsModule"],
-                _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModule"].forRoot()
+                _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NgbModule"].forRoot(),
+                _ngrx_store__WEBPACK_IMPORTED_MODULE_9__["StoreModule"].forRoot({ state: _reducer__WEBPACK_IMPORTED_MODULE_10__["reducer"] })
             ],
             providers: [],
             bootstrap: [
@@ -208,7 +321,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h2>\n    Editar Contato\n  </h2>\n  <form [formGroup]=\"contactForm\">\n    <div class=\"form-group\">\n      <label>\n        Nome\n      </label>\n      <input class=\"form-control\" formControlName=\"name\" placeholder=\"nome\">\n    </div>\n    <div formArrayName=\"fields\" *ngFor=\"let field of contactFields.controls; let i=index\">\n      <div class=\"form-row\" [formGroupName]=\"i\">\n        <div class=\"col-md-5\">\n          <input class=\"form-control\" formControlName=\"label\" placeholder=\"marcador\">\n        </div>\n        <div class=\"col-md-6\">\n          <input class=\"form-control\" formControlName=\"value\" placeholder=\"valor para o marcador\">\n        </div>\n      </div>\n    </div>\n    <div class=\"footer\">\n      <div class=\"row\">\n        <div class=\"col-md-10\"></div>\n        <div class=\"col-md-1\">\n          <button id=\"cancelButton\" class=\"btn btn-primary\" (click)=\"router.navigateByUrl('/contacts')\">\n            Cancelar\n          </button>\n        </div>\n        <div class=\"col-md-1\">\n          <button id=\"saveButton\" class=\"btn btn-primary\" (click)=\"save()\">\n            Gravar\n          </button>\n        </div>\n      </div>\n    </div>\n  </form>\n</div>"
+module.exports = "<div class=\"container\">\n  <h2 *ngIf=\"contactId\">\n    Editar Contato\n  </h2>\n  <h2 *ngIf=\"!contactId\">\n    Criar Contato\n  </h2>\n  <form [formGroup]=\"contactForm\">\n    <div class=\"form-group\">\n      <label>\n        Nome\n      </label>\n      <input class=\"form-control\" formControlName=\"name\" placeholder=\"nome\" required>\n    </div>\n    <div formArrayName=\"fields\" *ngFor=\"let field of contactFields.controls; let i=index\">\n      <div class=\"form-row\" [formGroupName]=\"i\">\n        <div class=\"col-md-3\">\n          <input class=\"form-control\" formControlName=\"label\" placeholder=\"Tipo de informação\" required>\n        </div>\n        <div class=\"col-md-8\">\n          <input class=\"form-control\" formControlName=\"value\" placeholder=\"Informação\">\n        </div>\n        <div class=\"col-md-1\">\n          <button type=\"button\" class=\"btn danger\" (click)=\"delField(i)\" ngbTooltip=\"Remover\">\n            <i class=\"fas fa-trash\"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n    <div class=\"form-row\">\n      <div class=\"col-md-11\"></div>\n      <div class=\"col-md-1\">\n        <button class=\"btn\" id=\"addFieldButton primary\" (click)=\"addField()\" ngbTooltip=\"Adicionar informação\">\n          <i class=\"fas fa-plus-circle\"></i>\n        </button>\n      </div>\n    </div>\n    <div class=\"footer\">\n      <div class=\"float-right\">\n        <button id=\"cancelButton\" class=\"btn btn-primary\" (click)=\"router.navigateByUrl('/contacts')\">\n          CANCELAR\n        </button>\n        &emsp;\n        <button id=\"saveButton\" class=\"btn btn-primary\" (click)=\"save()\" [disabled]=\"!contactForm.valid\">\n          SALVAR\n        </button>\n      </div>\n    </div>\n  </form>\n</div>"
 
 /***/ }),
 
@@ -226,6 +339,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _contact_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../contact.service */ "./src/app/contact.service.ts");
+/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../actions */ "./src/app/actions.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -235,18 +350,77 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
 
 
 
 
 var ContactDetailComponent = /** @class */ (function () {
-    function ContactDetailComponent(fb, router, contactService) {
+    function ContactDetailComponent(fb, router, contactService, route, store) {
+        var _this = this;
         this.fb = fb;
         this.router = router;
         this.contactService = contactService;
+        this.route = route;
+        this.store = store;
         this.contactForm = this.fb.group({
-            name: [''],
+            name: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required],
             fields: this.fb.array([])
+        });
+        this.store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_4__["select"])('state')).forEach(function (state) {
+            var id = _this.contactId =
+                _this.route.snapshot.paramMap.get('id');
+            var contacts = state.contacts;
+            if (!id || contacts.length === 0) {
+                return;
+            }
+            _this.index = contacts.findIndex(function (c) { return c._id === id; });
+            var contact = contacts[_this.index];
+            _this.contactForm.get('name').setValue(contact.name);
+            var fields = contact.fields;
+            for (var _i = 0, _a = Object.keys(fields); _i < _a.length; _i++) {
+                var label = _a[_i];
+                _this.contactFields.push(_this.fb.group({
+                    label: [label, _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required],
+                    value: [fields[label], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required]
+                }));
+            }
         });
     }
     ContactDetailComponent.prototype.ngOnInit = function () { };
@@ -257,13 +431,50 @@ var ContactDetailComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    ContactDetailComponent.prototype.addField = function () {
+        this.contactFields.push(this.fb.group({
+            label: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required],
+            value: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required]
+        }));
+    };
+    ContactDetailComponent.prototype.delField = function (index) {
+        this.contactFields.removeAt(index);
+    };
     ContactDetailComponent.prototype.save = function () {
-        var contact = {
-            name: this.contactForm.get('name').value,
-            fields: {}
-        };
-        this.contactService.createContact(contact);
-        this.router.navigateByUrl('/contacts');
+        return __awaiter(this, void 0, void 0, function () {
+            var fieldsArray, contact, i, id;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_5__["StartUpdate"]());
+                        fieldsArray = this.contactFields.value;
+                        contact = {
+                            name: this.contactForm.get('name').value,
+                            fields: {}
+                        };
+                        for (i = 0; i < fieldsArray.length; i++) {
+                            contact.fields[fieldsArray[i].label] = fieldsArray[i].value;
+                        }
+                        id = this.contactId;
+                        if (!id) return [3 /*break*/, 2];
+                        contact._id = this.contactId;
+                        return [4 /*yield*/, this.contactService.updContact(contact)];
+                    case 1:
+                        contact = _a.sent();
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_5__["UpdContact"](this.index, contact));
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this.contactService.addContact(contact)];
+                    case 3:
+                        contact = _a.sent();
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_5__["AddContact"](contact));
+                        _a.label = 4;
+                    case 4:
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_5__["SuccessUpdate"]());
+                        this.router.navigateByUrl('/contacts');
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     ContactDetailComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -273,7 +484,9 @@ var ContactDetailComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            _contact_service__WEBPACK_IMPORTED_MODULE_3__["ContactService"]])
+            _contact_service__WEBPACK_IMPORTED_MODULE_3__["ContactService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _ngrx_store__WEBPACK_IMPORTED_MODULE_4__["Store"]])
     ], ContactDetailComponent);
     return ContactDetailComponent;
 }());
@@ -324,15 +537,21 @@ var ContactService = /** @class */ (function () {
             .toPromise();
     };
     /** DELETE the contact from the server */
-    ContactService.prototype.deleteContact = function (contact) {
+    ContactService.prototype.delContact = function (contact) {
         return this.http.delete(this.contactsUrl + "/" + contact._id)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('deleteContact', null)))
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('delContact', null)))
             .toPromise();
     };
     /** POST: add a new contact to the server */
-    ContactService.prototype.createContact = function (contact) {
+    ContactService.prototype.addContact = function (contact) {
         return this.http.post(this.contactsUrl, contact)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('createContact', null)))
+            .toPromise();
+    };
+    /** PUT: update the contact on the server */
+    ContactService.prototype.updContact = function (contact) {
+        return this.http.put(this.contactsUrl + "/" + contact._id, contact)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('updateContact', null)))
             .toPromise();
     };
     /**
@@ -382,7 +601,7 @@ var ContactService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "#addButton {\n  font-size: 50px;\n  color: #e91e63;\n}"
+module.exports = "#addButton {\n  font-size: 50px;\n  color: #e91e63;\n}\n"
 
 /***/ }),
 
@@ -393,7 +612,7 @@ module.exports = "#addButton {\n  font-size: 50px;\n  color: #e91e63;\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-md-12\">\n    <h2>\n      Contatos ({{contacts.length}})\n    </h2>\n  </div>\n</div>\n<ul class=\"list-group\">\n  <li class=\"list-group-item\"\n  *ngFor=\"let contact of contacts\"\n  (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n    <div class=\"row\">\n      <div class=\"col-md-3\">\n        {{contact.name}}\n      </div>\n      <div class=\"col-md-3\">\n        {{contact.fields['email']}}\n      </div>\n      <div class=\"col-md-2\">\n        {{contact.fields['telefone']}}\n      </div>\n      <div class=\"col-md-3\">\n        {{getCargoEmpresa(contact)}}\n      </div>\n      <div class=\"col-md-1\">\n        <button type=\"button\" class=\"btn btn-danger\" (click)=\"deleteContact(contact)\" ngbTooltip=\"Remover contato\">\n          <i class=\"fas fa-trash\"></i>\n        </button>\n      </div>\n    </div>\n  </li>\n</ul>\n<div class=\"footer\">\n  <div class=\"float-right\">\n    <button type=\"button\" class=\"btn\" id=\"addButton\" (click)=\"router.navigateByUrl('/detail')\" ngbTooltip=\"Criar contato\">\n      <i class='fas fa-plus-circle'></i>\n    </button>\n  </div>\n</div>"
+module.exports = "<h2>\n  Contatos ({{contacts.length}})\n</h2>\n<h2 *ngIf=\"isUpdating && contacts.length === 0\">\n  Carregando...\n</h2>\n<h2 *ngIf=\"!isUpdating && contacts.length === 0\">\n  Sem contatos.\n</h2>\n<ul class=\"list-group\" [ngStyle]=\"{opacity: isUpdating? 0.5: 1}\">\n  <li class=\"list-group-item\" *ngFor=\"let contact of contacts; index as i\">\n    <div class=\"row\">\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{contact.name}}\n      </div>\n      <a class=\"col-md-2\" href=\"mailto:{{contact.fields['email']}}\">\n        {{contact.fields['email']}}\n      </a>\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{contact.fields['telefone']}}\n      </div>\n      <div class=\"col-md-3\" (click)=\"router.navigateByUrl('/detail/' + contact._id)\">\n        {{getCargoEmpresa(contact)}}\n      </div>\n      <div class=\"col-md-1\">\n        <button type=\"button\" class=\"btn danger\" (click)=\"delContact(i)\" ngbTooltip=\"Excluir\">\n          <i class=\"fas fa-trash\"></i>\n        </button>\n      </div>\n    </div>\n  </li>\n</ul>\n<div class=\"float-right\">\n    <button type=\"button\" class=\"btn\" id=\"addButton\" (click)=\"router.navigateByUrl('/detail')\" ngbTooltip=\"Criar novo contato\">\n      <i class='fas fa-plus-circle'></i>\n    </button>\n</div>\n"
 
 /***/ }),
 
@@ -410,6 +629,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _contact_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../contact.service */ "./src/app/contact.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/fesm5/store.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../actions */ "./src/app/actions.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -457,38 +678,54 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
+
+
 var ContactsComponent = /** @class */ (function () {
-    function ContactsComponent(contactService, router) {
+    function ContactsComponent(contactService, router, store) {
+        var _this = this;
         this.contactService = contactService;
         this.router = router;
-        this.contacts = [];
+        this.store = store;
+        store.pipe(Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_3__["select"])('state')).forEach(function (state) {
+            _this.isUpdating = state.isUpdating;
+            _this.contacts = state.contacts;
+        });
     }
     ContactsComponent.prototype.ngOnInit = function () {
         this.getContacts();
     };
     ContactsComponent.prototype.getContacts = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var contacts;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = this;
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_4__["StartUpdate"]());
                         return [4 /*yield*/, this.contactService.getContacts()];
                     case 1:
-                        _a.contacts = _b.sent();
+                        contacts = _a.sent();
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_4__["LoadContacts"](contacts));
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_4__["SuccessUpdate"]());
                         return [2 /*return*/];
                 }
             });
         });
     };
-    ContactsComponent.prototype.deleteContact = function (contact) {
-        this.contactService.deleteContact(contact);
-        var index = this.contacts.findIndex(function (value) {
-            return value._id === contact._id;
+    ContactsComponent.prototype.delContact = function (index) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_4__["StartUpdate"]());
+                        return [4 /*yield*/, this.contactService.delContact(this.contacts[index])];
+                    case 1:
+                        _a.sent();
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_4__["DelContact"](index));
+                        this.store.dispatch(new _actions__WEBPACK_IMPORTED_MODULE_4__["SuccessUpdate"]());
+                        return [2 /*return*/];
+                }
+            });
         });
-        if (index !== -1) {
-            this.contacts.splice(index, 1);
-        }
     };
     ContactsComponent.prototype.getCargoEmpresa = function (contact) {
         var fields = contact.fields;
@@ -512,11 +749,33 @@ var ContactsComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./contacts.component.css */ "./src/app/contacts/contacts.component.css")]
         }),
         __metadata("design:paramtypes", [_contact_service__WEBPACK_IMPORTED_MODULE_1__["ContactService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _ngrx_store__WEBPACK_IMPORTED_MODULE_3__["Store"]])
     ], ContactsComponent);
     return ContactsComponent;
 }());
 
+
+
+/***/ }),
+
+/***/ "./src/app/reducer.ts":
+/*!****************************!*\
+  !*** ./src/app/reducer.ts ***!
+  \****************************/
+/*! exports provided: reducer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reducer", function() { return reducer; });
+function reducer(state, action) {
+    if (state === void 0) { state = { isUpdating: false, error: null, contacts: [] }; }
+    if (action.reducer) {
+        return action.reducer(state);
+    }
+    return state;
+}
 
 
 /***/ }),

@@ -8,6 +8,8 @@ import { ContactDetailComponent } from './contact-detail/contact-detail.componen
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from './reducer';
 
 @NgModule({
    declarations: [
@@ -20,7 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
       HttpClientModule,
       AppRoutingModule,
       ReactiveFormsModule,
-      NgbModule.forRoot()
+      NgbModule.forRoot(),
+      StoreModule.forRoot({ state: reducer })
    ],
    providers: [],
    bootstrap: [
