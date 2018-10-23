@@ -4,7 +4,6 @@ const express = require("express");
 const superagent = require("superagent");
 const http_status_1 = require("http-status");
 const mongoose = require("mongoose");
-const morgan = require("morgan");
 const fakeLogger_1 = require("./fakeLogger");
 const contactModel_1 = require("../contactModel");
 const api_1 = require("../api");
@@ -22,7 +21,6 @@ describe('API', function () {
     let id;
     beforeAll(async () => {
         const app = express();
-        app.use(morgan('combined'));
         mongoose.connect('mongodb://localhost:27017/test', {
             useNewUrlParser: true,
             useCreateIndex: true

@@ -3,7 +3,6 @@ import superagent = require('superagent');
 import { OK, NOT_FOUND } from 'http-status';
 import http = require('http');
 import mongoose = require('mongoose');
-import morgan = require('morgan');
 import { FakeLogger } from './fakeLogger';
 import { ContactModel, CreateContactModel } from '../contactModel';
 import { api } from '../api';
@@ -27,7 +26,6 @@ describe('API', function () {
 
   beforeAll(async () => {
     const app = express();
-    app.use(morgan('combined'));
     mongoose.connect('mongodb://localhost:27017/test', {
       useNewUrlParser: true,
       useCreateIndex: true

@@ -41,7 +41,7 @@
           CANCELAR
         </button>
         &emsp;
-        <button id="saveButton" class="btn btn-primary" (click)="save()" [disabled]="!contactForm.valid">
+        <button id="saveButton" class="btn btn-primary" (click)="save()" [disabled]="!contactForm.valid || !contactForm.dirty">
           SALVAR
         </button>
       </div>
