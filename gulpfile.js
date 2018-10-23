@@ -18,7 +18,8 @@ gulp.task('test', (done) => {
   gulp.src('dist/spec/*.spec.js')
     .pipe(jasmine({
       reporter: new SpecReporter({ spec: { displayPending: true } })
-    })).on('data', () => {})
+    }))
+    .on('data', () => {})
     .on('end', done);
 })
 
